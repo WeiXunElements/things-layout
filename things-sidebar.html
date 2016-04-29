@@ -1,0 +1,302 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../paper-badge/paper-badge.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+
+<link rel="import" href="../things-ajax/things-ajax.html">
+<link rel="import" href="../things-global-behavior/things-global-behavior.html">
+<link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
+
+<link rel="import" href="./things-routing-behavior.html">
+
+<!--
+해당 Element는 
+  1.things-routing-behavior.html를 사용하여 Routing 등록 및 설정을 수행한다.
+  2.action에서 제공하는 Url로 Menu를 검색하여 Routing 등록 및 화면 좌측에 메뉴로 제공한다.
+  3.메뉴성이기에 Drawer Attribute가 꼭 필요하다.
+
+  Example:
+    <things-sidebar drawer class="layout vertical" 
+      title="MENU" screens="{{screens}}" action="menus.json?mode=auth">
+    </things-sidebar>
+-->
+
+<dom-module id="things-sidebar">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: var(--paper-blue-grey-800);
+      }
+      
+      :host paper-scroll-header-panel {
+        height: 100%;
+      }
+      
+      :host paper-badge {
+        top: 8px !important;
+        left: 210px !important;
+      }
+      
+      :host paper-badge::shadow div.paper-badge {
+        background-color: rgba(0, 0, 0, .15) !important;
+        width: 30px !important;
+        border-radius: 5px;
+        padding: 0px 1px;
+      }
+      
+      :host paper-button {
+        display: block;
+        border-bottom: 1px solid rgba(0, 0, 0, .1);
+        margin: 0;
+        color: var(--paper-blue-grey-300);
+        font-size: 14px;
+        font-weight: 400;
+        text-align: left
+      }
+      
+      :host paper-button iron-icon {
+        width: 18px;
+        height: 18px;
+        margin-top: -2px;
+        margin-right: 4px
+      }
+      
+      :host iron-collapse {
+        background-color: rgba(0, 0, 0, .1);
+        border: 1px solid rgba(0, 0, 0, .05);
+        border-width: 1px 0;
+        border-left: 3px solid var(--paper-cyan-800);
+      }
+      :host paper-listbox {
+        background-color: rgba(0, 0, 0, .1);
+        border: 1px solid rgba(0, 0, 0, .05);
+        border-width: 1px 0;
+        border-left: 3px solid var(--paper-cyan-800);
+      }
+      
+      :host iron-collapse paper-item {
+        padding: 0 10px;
+        display: block !important;
+        min-height: 30px !important;
+        border-bottom: 1px solid rgba(0, 0, 0, .1);
+        font-size: 12px !important;
+        color: var(--paper-blue-grey-100);
+        line-height: 2.5 !important
+      }
+      
+      :host iron-collapse paper-item:hover,
+      [selected] {
+        background-color: teal;
+      }
+      
+      :host iron-collapse paper-item iron-icon {
+        width: 13px;
+        height: 13px;
+        margin-right: 4px;
+      }
+      
+      :host .group-btnline paper-icon-button {
+        color: var(--paper-blue-grey-400);
+      }
+      
+      :host .brand {
+        background: var(--paper-blue-grey-700);
+        color: var(--paper-blue-grey-100);
+        padding: 7px 10px 5px 10px;
+        text-transform: capitalize;
+      }
+      
+      :host .brand iron-icon {
+        background: var(--paper-teal-700);
+      }
+    </style>
+
+    <things-ajax
+      auto
+      id="refresh"
+      resource-url="{{action}}"
+      method="GET"
+      content-type="application/json" 
+      last-response="{{menu}}">
+    </things-ajax>
+
+    <div class="brand">
+      <things-i18n-msg msgid="title.[[title]]" auto>[[title]]</things-i18n-msg>
+    </div>
+
+    <!-- Drawer Scroll Header Panel -->
+    <paper-scroll-header-panel id = "panel">
+      <template is="dom-repeat" items="{{menuGroup}}" as=group>
+        
+        <!-- {{item}} and {{index}} can be used in this binding scope -->
+        <paper-button aria-controls={{group.menuGroupId}} on-click="toggle">
+          <iron-icon icon="icons:folder-open"></iron-icon>[[group.title]]
+        </paper-button>
+
+        <iron-collapse id="{{group.menuGroupId}}" tabindex="0">
+          <paper-listbox selected-item ="{{_selectedMenu}}" class="content">
+            <template is="dom-repeat" items="{{group.child}}" as=item>
+              <paper-item data$="{{item}}">
+                <iron-icon icon="icons:folder-open">
+                </iron-icon>[[item.title]]  
+              </paper-item>
+            </template>
+          </paper-listbox>
+        </iron-collapse>
+
+      </template>
+    </paper-scroll-header-panel>
+
+    <div class="group-btnline">
+      <paper-icon-button icon="icons:refresh" id="refresh-button" on-tap="refreshmenu">
+      </paper-icon-button>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'things-sidebar',
+
+      properties: {
+        /**
+         * Brand title that will be show on top of menu
+         */
+        title: {
+          type: String
+        },
+
+        /**
+         * url that where the menu data get from
+         */
+        action: {
+          type: String
+        },
+        
+        /**
+         * menu group returns menu tree as Array
+         * [ { 
+         *    id: 1, name: 'System', title: 'System', menu_type: 'Menu', child: [ { child menus ...} ]
+         * }, { 
+         *    id: 2, name: 'Base', title: 'Base', menu_type: 'Menu', child: [ { child menus ...} ]
+         * } ]
+         */
+        menuGroup: {
+          type: Array,
+          notify: true
+        },
+
+        /**
+         * 메뉴 리스트 중에 App 안에 나타날 실제 화면 (menu_type이 'SCREEN') 정보.
+         * 화면 정보들만 라우팅에 추가된다.
+         */
+        screens: {
+          type: Array,
+          notify: true,
+          value :[]
+        },
+        
+        /**
+         * 현재 선택된 메뉴 정보 
+         */
+        _selectedMenu: {
+          type: Object
+        }
+      },
+
+      observers: [
+        '_onChangeMenu(menu)',
+        '_onSelectedMenuChange(_selectedMenu)'
+      ],
+
+      behaviors: [
+        Things.RoutingBehavior,
+        Things.GlobalBehavior
+      ],
+
+      /**
+       * Life Cycle
+       */
+      attached: function() {
+        this.addDefaultRouting('home', 'login');
+      },
+      
+      /**
+       * When last response data recieved this function will be called
+       * then convert these data to menu tree and set to menuGroup
+       * also convert to screen array and set to screens.
+       * 
+       * @param {Object} 메뉴 정보 menu.total : 총 메뉴 개수, menu.items : 메뉴 리스트 
+       */
+      _onChangeMenu: function(menu) {
+        if(menu && menu.items.length > 0) {
+          var groups = [], screens = [], me = this;
+
+          menu.items.forEach(function(item) {
+            if (item.menu_type === 'MENU') {
+              item.child = me._getChildMenu(item, menu.items);
+              item.menuGroupId = 'group' + item.id;
+              groups.push(item);
+
+            } else if(item.menu_type === 'SCREEN') {
+              // item.isDynamic = (item.routing_type && item.routing_type == 'RESOURCE');
+              // item.isDiy = (item.routing_type && item.routing_type != 'DIY');
+              screens.push(item);
+            }
+          });
+
+          // ******** Routing 초기화 ***********
+          this.init(screens, 'home', 'login');
+          // *********************************
+
+          this.menuGroup = groups;
+          this.screens = screens;
+        }
+      },
+
+      /**
+       * Filter child menu and return it
+       * @param  {Array} parent group id
+       * @param  {Array} all menu list
+       * @return {Array} child screen array
+       */
+      _getChildMenu: function(menuGroup, items) {
+        return items.filter(function(item) {
+          return (item && item.menu_type === 'SCREEN' && item.parent_id === menuGroup.id);
+        });
+      },
+
+      /**
+       * When selected menu changed route screen to the menu screen
+       * @param  {String}
+       */
+      _onSelectedMenuChange: function(selectedMenu) {
+        if(selectedMenu) {
+          var data = JSON.parse(selectedMenu.getAttribute("data"));
+          var url = '/' + (data.routing ? data.routing : '');
+          page(url);
+        }
+      },
+
+      /**
+       * Refresh menu content
+       * @param {Object} e 버튼 클릭 이벤트 
+       */
+      refreshmenu: function(e) {
+        // TODO Check 메뉴를 리프레쉬하면 라우팅도 중복되어 추가될 듯 한데 체크 필요 
+        this.$.refresh.generateRequest();
+      },
+      
+      /**
+       * Toggle menu group box
+       * @param {Object} e 버튼 클릭 이벤트
+       */
+      toggle: function(e) {
+        this.$$('#' + e.target.ariaControls).toggle();
+      }
+
+    });
+  </script>
+</dom-module>
