@@ -60,8 +60,8 @@ Things.RoutingBehavior = {
   addLastRouting: function() {
     page('*', function(attempted) {
       let url = window.location.href + attempted.path.substr(1);
-      app.$.toastConfirm.text = `Can't find: ${url}. Redirected you to Home Page`;
-      app.$.toastConfirm.show();
+      // app.$.toastConfirm.text = `Can't find: ${url}. Redirected you to Home Page`;
+      // app.$.toastConfirm.show();
       page.redirect('/');
     });
     

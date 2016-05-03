@@ -13,320 +13,384 @@
 
 <!--
 해당 Element는 
-  1.things-routing-behavior.html를 사용하여 Routing 등록 및 설정을 수행한다.
-  2.action에서 제공하는 Url로 Menu를 검색하여 Routing 등록 및 화면 좌측에 메뉴로 제공한다.
-  3.메뉴성이기에 Drawer Attribute가 꼭 필요하다.
+	1.things-routing-behavior.html를 사용하여 Routing 등록 및 설정을 수행한다.
+	2.action에서 제공하는 Url로 Menu를 검색하여 Routing 등록 및 화면 좌측에 메뉴로 제공한다.
+	3.메뉴성이기에 Drawer Attribute가 꼭 필요하다.
 
-  Example:
-    <things-sidebar drawer class="layout vertical" 
-      title="MENU" screens="{{screens}}" action="menus.json?mode=auth">
-    </things-sidebar>
+	Example:
+		<things-sidebar drawer class="layout vertical" 
+			title="MENU" screens="{{screens}}" action="menus.json?mode=auth">
+		</things-sidebar>
 -->
 
 <dom-module id="things-sidebar">
-  <template>
-    <style>
-      :host {
-        display: block;
-        background-color: var(--paper-blue-grey-800);
-      }
-      
-      :host paper-scroll-header-panel {
-        height: 100%;
-      }
-      
-      :host paper-badge {
-        top: 8px !important;
-        left: 210px !important;
-      }
-      
-      :host paper-badge::shadow div.paper-badge {
-        background-color: rgba(0, 0, 0, .15) !important;
-        width: 30px !important;
-        border-radius: 5px;
-        padding: 0px 1px;
-      }
-      
-      :host paper-button {
-        display: block;
-        border-bottom: 1px solid rgba(0, 0, 0, .1);
-        margin: 0;
-        color: var(--paper-blue-grey-300);
-        font-size: 14px;
-        font-weight: 400;
-        text-align: left
-      }
-      
-      :host paper-button iron-icon {
-        width: 18px;
-        height: 18px;
-        margin-top: -2px;
-        margin-right: 4px
-      }
-      
-      :host iron-collapse {
-        background-color: rgba(0, 0, 0, .1);
-        border: 1px solid rgba(0, 0, 0, .05);
-        border-width: 1px 0;
-        border-left: 3px solid var(--paper-cyan-800);
-      }
-      :host paper-listbox {
-        background-color: rgba(0, 0, 0, .1);
-        border: 1px solid rgba(0, 0, 0, .05);
-        border-width: 1px 0;
-        border-left: 3px solid var(--paper-cyan-800);
-      }
-      
-      :host iron-collapse paper-item {
-        padding: 0 10px;
-        display: block !important;
-        min-height: 30px !important;
-        border-bottom: 1px solid rgba(0, 0, 0, .1);
-        font-size: 12px !important;
-        color: var(--paper-blue-grey-100);
-        line-height: 2.5 !important
-      }
-      
-      :host iron-collapse paper-item:hover,
-      [selected] {
-        background-color: teal;
-      }
-      
-      :host iron-collapse paper-item iron-icon {
-        width: 13px;
-        height: 13px;
-        margin-right: 4px;
-      }
-      
-      :host .group-btnline paper-icon-button {
-        color: var(--paper-blue-grey-400);
-      }
-      
-      :host .brand {
-        background: var(--paper-blue-grey-700);
-        color: var(--paper-blue-grey-100);
-        padding: 7px 10px 5px 10px;
-        text-transform: capitalize;
-      }
-      
-      :host .brand iron-icon {
-        background: var(--paper-teal-700);
-      }
-    </style>
+	<template>
+		<style>
+			:host {
+				display: block;
+				background-color: var(--paper-blue-grey-800);
+			}
+			
+			:host paper-scroll-header-panel {
+				height: 100%;
+			}
+			
+			:host paper-badge {
+				top: 8px !important;
+				left: 210px !important;
+			}
+			
+			:host paper-badge::shadow div.paper-badge {
+				background-color: rgba(0, 0, 0, .15) !important;
+				width: 30px !important;
+				border-radius: 5px;
+				padding: 0px 1px;
+			}
+			
+			:host paper-button {
+				display: block;
+				border-bottom: 1px solid rgba(0, 0, 0, .1);
+				margin: 0;
+				color: var(--paper-blue-grey-300);
+				font-size: 14px;
+				font-weight: 400;
+				text-align: left
+			}
+			
+			:host paper-button iron-icon {
+				width: 18px;
+				height: 18px;
+				margin-top: -2px;
+				margin-right: 4px
+			}
+			
+			:host iron-collapse {
+				background-color: rgba(0, 0, 0, .1);
+				border: 1px solid rgba(0, 0, 0, .05);
+				border-width: 1px 0;
+				border-left: 3px solid var(--paper-cyan-800);
+			}
+			:host paper-listbox {
+				background-color: rgba(0, 0, 0, .1);
+				border: 1px solid rgba(0, 0, 0, .05);
+				border-width: 1px 0;
+				border-left: 3px solid var(--paper-cyan-800);
+			}
+			
+			:host iron-collapse paper-item {
+				padding: 0 10px;
+				display: block !important;
+				min-height: 30px !important;
+				border-bottom: 1px solid rgba(0, 0, 0, .1);
+				font-size: 12px !important;
+				color: var(--paper-blue-grey-100);
+				line-height: 2.5 !important
+			}
+			
+			:host iron-collapse paper-item:hover,
+			[selected] {
+				background-color: teal;
+			}
+			
+			:host iron-collapse paper-item iron-icon {
+				width: 13px;
+				height: 13px;
+				margin-right: 4px;
+			}
+			
+			:host .group-btnline paper-icon-button {
+				color: var(--paper-blue-grey-400);
+			}
+			
+			:host .brand {
+				background: var(--paper-blue-grey-700);
+				color: var(--paper-blue-grey-100);
+				padding: 7px 10px 5px 10px;
+				text-transform: capitalize;
+			}
+			
+			:host .brand iron-icon {
+				background: var(--paper-teal-700);
+			}
 
-    <things-ajax
-      auto
-      id="refresh"
-      resource-url="{{action}}"
-      method="GET"
-      content-type="application/json" 
-      last-response="{{menu}}">
-    </things-ajax>
+		    :host iron-icon {
+		      width:15px;height:15px;
+		      margin-right:4px;
+		    }
+		    
+		    :host .side-toggle {
+		      background-color:var(--paper-teal-700);
+		    }
+		    
+		    :host .side-toggle paper-icon-button {
+		      width:31px;height:31px;
+		      margin-left:3px;
+		      padding:0 4px 0 2px;
+		    }
+		    
+		    :host .user-menu {
+		      padding:7px 5px 0 0;
+		      color:var(--paper-blue-grey-400);
+		      font-size:13px;
+		    }
 
-    <div class="brand">
-      <things-i18n-msg msgid="title.[[title]]" auto>[[title]]</things-i18n-msg>
-    </div>
+		    :host .user-menu paper-icon-button {
+		      width:18px;height:18px;
+		      position:relative;
+		      top:-1px;
+		      margin-left:5px;
+		      padding:1px;
+		      color:var(--paper-blue-grey-200);
+		    }
 
-    <!-- Drawer Scroll Header Panel -->
-    <paper-scroll-header-panel id = "panel">
-      <template is="dom-repeat" items="{{menuGroup}}" as=group>
-        
-        <!-- {{item}} and {{index}} can be used in this binding scope -->
-        <paper-button aria-controls={{group.menuGroupId}} on-click="toggle">
-          <iron-icon icon="icons:folder-open"></iron-icon>[[group.title]]
-        </paper-button>
+		    :host .user-menu things-logout::shadow paper-icon-button {
+		      width:18px;height:18px;
+		      position:relative;
+		      top:-1px;
+		      margin-left:1px;
+		      padding:0px;
+		      color:var(--paper-blue-grey-200);
+		    }
 
-        <iron-collapse id="{{group.menuGroupId}}" tabindex="0">
-          <paper-listbox selected-item ="{{_selectedMenu}}" class="content">
-            <template is="dom-repeat" items="{{group.child}}" as=item>
-              <paper-item data$="{{item}}">
-                <iron-icon icon="icons:folder-open">
-                </iron-icon>[[item.title]]  
-              </paper-item>
-            </template>
-          </paper-listbox>
-        </iron-collapse>
+		    :host .search {
+		      padding:5px 0 3px 5px;
+		    }
+		    
+		    :host .search input {
+		      background-color:rgba(255,255,255,.1);
+		      border-radius:3px;
+		      border:1px solid rgba(255,255,255,.15);
+		      padding:1px 3px;
+		      max-width:120px;
+		      color:#fff;
+		      font-size:13px;
+		    }
 
-      </template>
-    </paper-scroll-header-panel>
+		    :host .search paper-icon-button {
+		      width:22px;height:22px;
+		      margin-left:3px;
+		      padding:1px;
+		    }
+		</style>
 
-    <div class="group-btnline">
-      <paper-icon-button icon="icons:refresh" id="refresh-button" on-tap="refreshmenu">
-      </paper-icon-button>
-    </div>
-  </template>
+		<things-ajax
+			auto
+			id="refresh"
+			resource-url="{{action}}"
+			method="GET"
+			content-type="application/json" 
+			last-response="{{menu}}">
+		</things-ajax>
 
-  <script>
-    Polymer({
-      is: 'things-sidebar',
+		<div class="brand">
+			<things-i18n-msg msgid="title.[[title]]" auto>[[title]]</things-i18n-msg>
+		</div>
 
-      properties: {
-        /**
-         * Brand title that will be show on top of menu
-         */
-        title: {
-          type: String
-        },
+		<!-- Drawer Scroll Header Panel -->
+		<paper-scroll-header-panel id = "panel">
 
-        /**
-         * url that where the menu data get from
-         */
-        action: {
-          type: String
-        },
-        
-        /**
-         * menu group returns menu tree as Array
-         * [ { 
-         *    id: 1, name: 'System', title: 'System', menu_type: 'Menu', child: [ { child menus ...} ]
-         * }, { 
-         *    id: 2, name: 'Base', title: 'Base', menu_type: 'Menu', child: [ { child menus ...} ]
-         * } ]
-         */
-        menuGroup: {
-          type: Array,
-          notify: true
-        },
+			<content></content>
 
-        /**
-         * 메뉴 리스트 중에 App 안에 나타날 실제 화면 (menu_type이 'SCREEN') 정보.
-         * 화면 정보들만 라우팅에 추가된다.
-         */
-        screens: {
-          type: Array,
-          notify: true,
-          value :[]
-        },
+			<template is="dom-repeat" items="{{menuGroup}}" as=group>
+				
+				<!-- {{item}} and {{index}} can be used in this binding scope -->
+				<paper-button aria-controls={{group.menuGroupId}} on-click="toggle">
+					<iron-icon icon="icons:folder-open"></iron-icon>[[group.title]]
+				</paper-button>
 
-        /**
-         * Resource Screen List
-         */
-        resourceScreens: {
-          type: Array,
-          notify: true,
-          value: function() {
-            return [];
-          }
-        },
+				<iron-collapse id="{{group.menuGroupId}}" tabindex="0">
+					<paper-listbox selected-item ="{{_selectedMenu}}" class="content">
+						<template is="dom-repeat" items="{{group.child}}" as=item>
+							<paper-item data$="{{item}}">
+								<iron-icon icon="icons:folder-open">
+								</iron-icon>[[item.title]]  
+							</paper-item>
+						</template>
+					</paper-listbox>
+				</iron-collapse>
 
-        /**
-         * Diy Screen List
-         */
-        diyScreens: {
-          type: Array,
-          notify: true,
-          value: function() {
-            return [];
-          }
-        },        
-        
-        /**
-         * 현재 선택된 메뉴 정보 
-         */
-        _selectedMenu: {
-          type: Object
-        }
-      },
+			</template>
+		</paper-scroll-header-panel>
 
-      observers: [
-        '_onChangeMenu(menu)',
-        '_onSelectedMenuChange(_selectedMenu)'
-      ],
+		<div class="group-btnline">
+			<paper-icon-button icon="icons:refresh" id="refresh-button" on-tap="refreshmenu">
+			</paper-icon-button>
+		</div>
+	</template>
 
-      behaviors: [
-        Things.RoutingBehavior,
-        Things.GlobalBehavior
-      ],
+	<script>
+		Polymer({
+			is: 'things-sidebar',
 
-      /**
-       * Life Cycle
-       */
-      attached: function() {
-        this.addDefaultRouting('home', 'login');
-      },
-      
-      /**
-       * When last response data recieved this function will be called
-       * then convert these data to menu tree and set to menuGroup
-       * also convert to screen array and set to screens.
-       * 
-       * @param {Object} 메뉴 정보 menu.total : 총 메뉴 개수, menu.items : 메뉴 리스트 
-       */
-      _onChangeMenu: function(menu) {
-        if(menu && menu.items.length > 0) {
-          var groups = [], screens = [], rscScreens = [], diyScreens = [], me = this;
+			properties: {
+				/**
+				 * Brand title that will be show on top of menu
+				 */
+				title: {
+					type: String
+				},
 
-          menu.items.forEach(function(item) {
-            if (item.menu_type === 'MENU') {
-              item.child = me._getChildMenu(item, menu.items);
-              item.menuGroupId = 'group' + item.id;
-              groups.push(item);
+				/**
+				 * url that where the menu data get from
+				 */
+				action: {
+					type: String
+				},
+				
+				/**
+				 * menu group returns menu tree as Array
+				 * [ { 
+				 *    id: 1, name: 'System', title: 'System', menu_type: 'Menu', child: [ { child menus ...} ]
+				 * }, { 
+				 *    id: 2, name: 'Base', title: 'Base', menu_type: 'Menu', child: [ { child menus ...} ]
+				 * } ]
+				 */
+				menuGroup: {
+					type: Array,
+					notify: true
+				},
 
-            } else if(item.menu_type === 'SCREEN') {
-              if(item.routing_type) {
-                if(item.routing_type == 'RESOURCE') {
-                  rscScreens.push(item);
-                } else if(item.routing_type == 'DIY') {
-                  diyScreens.push(item);
-                }
-              }
+				/**
+				 * 메뉴 리스트 중에 App 안에 나타날 실제 화면 (menu_type이 'SCREEN') 정보.
+				 * 화면 정보들만 라우팅에 추가된다.
+				 */
+				screens: {
+					type: Array,
+					notify: true,
+					value :[]
+				},
 
-              screens.push(item);
-            }
-          });
+				/**
+				 * Resource Screen List
+				 */
+				resourceScreens: {
+					type: Array,
+					notify: true,
+					value: function() {
+						return [];
+					}
+				},
 
-          // ******** Routing 초기화 ***********
-          this.init(screens, 'home', 'login');
-          // *********************************
+				/**
+				 * Diy Screen List
+				 */
+				diyScreens: {
+					type: Array,
+					notify: true,
+					value: function() {
+						return [];
+					}
+				},        
+				/**
+				 * 현재 선택된 메뉴 정보 
+				 */
+				_selectedMenu: {
+					type: Object
+				}
+			},
 
-          this.menuGroup = groups;
-          this.screens = screens;
-          this.resourceScreens = rscScreens;
-          this.diyScreens = diyScreens;          
-        }
-      },
+			observers: [
+				'_onChangeMenu(menu)',
+				'_onSelectedMenuChange(_selectedMenu)'
+			],
+			// listeners: {
+			// 	'setting-toggler.tap': 'showSetting',
+			// 	'account.tap': 'showProfile'
+			// },
+			behaviors: [
+				Things.RoutingBehavior,
+				Things.GlobalBehavior
+			],
 
-      /**
-       * Filter child menu and return it
-       * @param  {Array} parent group id
-       * @param  {Array} all menu list
-       * @return {Array} child screen array
-       */
-      _getChildMenu: function(menuGroup, items) {
-        return items.filter(function(item) {
-          return (item && item.menu_type === 'SCREEN' && item.parent_id === menuGroup.id);
-        });
-      },
+			/**
+			 * Life Cycle
+			 */
+			attached: function() {
+				this.addDefaultRouting('home', 'login');
+			},
+			
+			/**
+			 * When last response data recieved this function will be called
+			 * then convert these data to menu tree and set to menuGroup
+			 * also convert to screen array and set to screens.
+			 * 
+			 * @param {Object} 메뉴 정보 menu.total : 총 메뉴 개수, menu.items : 메뉴 리스트 
+			 */
+			_onChangeMenu: function(menu) {
+				if(menu && menu.items.length > 0) {
+					var groups = [], screens = [], rscScreens = [], diyScreens = [], me = this;
 
-      /**
-       * When selected menu changed route screen to the menu screen
-       * @param  {String}
-       */
-      _onSelectedMenuChange: function(selectedMenu) {
-        if(selectedMenu) {
-          var data = JSON.parse(selectedMenu.getAttribute("data"));
-          var url = '/' + (data.routing ? data.routing : '');
-          page(url);
-        }
-      },
+					menu.items.forEach(function(item) {
+						if (item.menu_type === 'MENU') {
+							item.child = me._getChildMenu(item, menu.items);
+							item.menuGroupId = 'group' + item.id;
+							groups.push(item);
 
-      /**
-       * Refresh menu content
-       * @param {Object} e 버튼 클릭 이벤트 
-       */
-      refreshmenu: function(e) {
-        // TODO Check 메뉴를 리프레쉬하면 라우팅도 중복되어 추가될 듯 한데 체크 필요 
-        this.$.refresh.generateRequest();
-      },
-      
-      /**
-       * Toggle menu group box
-       * @param {Object} e 버튼 클릭 이벤트
-       */
-      toggle: function(e) {
-        this.$$('#' + e.target.ariaControls).toggle();
-      }
+						} else if(item.menu_type === 'SCREEN') {
+							if(item.routing_type) {
+								if(item.routing_type == 'RESOURCE') {
+									rscScreens.push(item);
+								} else if(item.routing_type == 'DIY') {
+									diyScreens.push(item);
+								}
+							}
 
-    });
-  </script>
+							screens.push(item);
+						}
+					});
+
+					// ******** Routing 초기화 ***********
+					this.init(screens, 'home', 'login');
+					// *********************************
+
+					this.menuGroup = groups;
+					this.screens = screens;
+					this.resourceScreens = rscScreens;
+					this.diyScreens = diyScreens;          
+				}
+			},
+
+			/**
+			 * Filter child menu and return it
+			 * @param  {Array} parent group id
+			 * @param  {Array} all menu list
+			 * @return {Array} child screen array
+			 */
+			_getChildMenu: function(menuGroup, items) {
+				return items.filter(function(item) {
+					return (item && item.menu_type === 'SCREEN' && item.parent_id === menuGroup.id);
+				});
+			},
+
+			/**
+			 * When selected menu changed route screen to the menu screen
+			 * @param  {String}
+			 */
+			_onSelectedMenuChange: function(selectedMenu) {
+				if(selectedMenu) {
+					var data = JSON.parse(selectedMenu.getAttribute("data"));
+					var url = '/' + (data.routing ? data.routing : '');
+					page(url);
+				}
+			},
+
+			/**
+			 * Refresh menu content
+			 * @param {Object} e 버튼 클릭 이벤트 
+			 */
+			refreshmenu: function(e) {
+				// TODO Check 메뉴를 리프레쉬하면 라우팅도 중복되어 추가될 듯 한데 체크 필요 
+				this.$.refresh.generateRequest();
+			},
+			
+			/**
+			 * Toggle menu group box
+			 * @param {Object} e 버튼 클릭 이벤트
+			 */
+			toggle: function(e) {
+				this.$$('#' + e.target.ariaControls).toggle();
+			}
+
+		});
+	</script>
 </dom-module>

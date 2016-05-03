@@ -9,7 +9,7 @@
 <link rel="import" href="../things-resource-combo/things-locale-combo.html">
 <link rel="import" href="../things-setting/things-setting-dialog.html">
 <link rel="import" href="../things-setting/things-setting.html">
-<link rel="import" href="things-sidebar-toggle.html">
+
 <dom-module id="things-header">
   <template>
   <style>
@@ -79,15 +79,12 @@
     }
   </style>
 
-  <div>
-    <!-- menu toggle -->
-    <things-sidebar-toggle drawer-id="[[drawerId]]"></things-sidebar-toggle>
-<!--     <paper-icon-button icon="icons:menu" id="sidebar-toggler">
-    </paper-icon-button>
-    <paper-tooltip for="sidebar-toggler">
-      <things-i18n-msg msgid="button.toggle_sidebar" auto>Toggle Sidebar</things-i18n-msg>
-    </paper-tooltip> -->
-  </div>
+  <!-- menu toggle -->
+  <paper-icon-button icon="icons:menu" id="sidebar-toggler">
+  </paper-icon-button>
+  <paper-tooltip for="sidebar-toggler">
+    <things-i18n-msg msgid="button.toggle_sidebar" auto>Toggle Sidebar</things-i18n-msg>
+  </paper-tooltip>
 
   </template>
 
@@ -118,7 +115,6 @@
       toggleSidebar: function(e) {
         var drawer = app.$[this.drawerId];
         
-        if(this.$.logout.isSignedIn()) {
           if(drawer.forceNarrow) {
             drawer.forceNarrow = false
           } else if(!drawer.narrow) {
@@ -126,7 +122,6 @@
           } else {
             drawer.togglePanel();
           }
-        }
       }
 
     });
