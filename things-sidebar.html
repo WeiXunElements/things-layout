@@ -28,148 +28,60 @@
     <style>
       :host {
         display: block;
-        background-color: var(--paper-blue-grey-800);
+        background-color:#707070;
+        color:#fff;
       }
-      
-      :host paper-scroll-header-panel {
+      paper-scroll-header-panel {
         height: 100%;
       }
-      
-      :host paper-badge {
-        top: 8px !important;
-        left: 210px !important;
+      .brand {
+        background:#346597;
+        min-height:37px;
+        padding: 8px 0 0 50px;
+        text-transform: capitalize;
       }
-      
-      :host paper-badge::shadow div.paper-badge {
-        background-color: rgba(0, 0, 0, .15) !important;
-        width: 30px !important;
-        border-radius: 5px;
-        padding: 0px 1px;
-      }
-      
-      :host paper-button {
+      paper-button {
         display: block;
-        border-bottom: 1px solid rgba(0, 0, 0, .1);
+        border-bottom: 1px solid rgba(0, 0, 0, .15);
         margin: 0;
-        color: var(--paper-blue-grey-300);
         font-size: 14px;
         font-weight: 400;
-        text-align: left
+        text-align: left;
+        @apply(--border-radius-clear);
       }
-      
-      :host paper-button iron-icon {
-        width: 18px;
-        height: 18px;
+      paper-button iron-icon {
+        width: 15px;height: 15px;
         margin-top: -2px;
         margin-right: 4px
       }
-      
-      :host iron-collapse {
-        background-color: rgba(0, 0, 0, .1);
-        border: 1px solid rgba(0, 0, 0, .05);
-        border-width: 1px 0;
-        border-left: 3px solid var(--paper-cyan-800);
+      paper-listbox {
+        background-color: rgba(0, 0, 0, .3);
+        border-bottom: 1px solid rgba(0, 0, 0, .05);
+        border-left: 2px solid var(--xmes-secondary-background-color);
+        padding:0;
       }
-      :host paper-listbox {
-        background-color: rgba(0, 0, 0, .1);
-        border: 1px solid rgba(0, 0, 0, .05);
-        border-width: 1px 0;
-        border-left: 3px solid var(--paper-cyan-800);
+      paper-item:before{
+        content:"";
+        display:inline-block;
+        width:3px;height:3px;
+        position:relative;
+        top:-2px;
+        margin-right:4px;
+        background-color:rgba(255,255,255,.3);
       }
-      
-      :host iron-collapse paper-item {
+      paper-item {
         padding: 0 10px;
         display: block !important;
         min-height: 30px !important;
         border-bottom: 1px solid rgba(0, 0, 0, .1);
         font-size: 12px !important;
-        color: var(--paper-blue-grey-100);
+        color:rgba(255,255,255,.8);
         line-height: 2.5 !important
       }
       
       :host iron-collapse paper-item:hover,
       [selected] {
-        background-color: teal;
-      }
-      
-      :host iron-collapse paper-item iron-icon {
-        width: 13px;
-        height: 13px;
-        margin-right: 4px;
-      }
-      
-      :host .group-btnline paper-icon-button {
-        color: var(--paper-blue-grey-400);
-      }
-      
-      :host .brand {
-        background: var(--paper-blue-grey-700);
-        color: var(--paper-blue-grey-100);
-        padding: 7px 10px 5px 10px;
-        text-transform: capitalize;
-      }
-      
-      :host .brand iron-icon {
-        background: var(--paper-teal-700);
-      }
-
-      :host iron-icon {
-        width:15px;height:15px;
-        margin-right:4px;
-      }
-
-      :host .side-toggle {
-        background-color:var(--paper-teal-700);
-      }
-
-      :host .side-toggle paper-icon-button {
-        width:31px;height:31px;
-        margin-left:3px;
-        padding:0 4px 0 2px;
-      }
-
-      :host .user-menu {
-        padding:7px 5px 0 0;
-        color:var(--paper-blue-grey-400);
-        font-size:13px;
-      }
-
-      :host .user-menu paper-icon-button {
-        width:18px;height:18px;
-        position:relative;
-        top:-1px;
-        margin-left:5px;
-        padding:1px;
-        color:var(--paper-blue-grey-200);
-      }
-
-      :host .user-menu things-logout::shadow paper-icon-button {
-        width:18px;height:18px;
-        position:relative;
-        top:-1px;
-        margin-left:1px;
-        padding:0px;
-        color:var(--paper-blue-grey-200);
-      }
-
-      :host .search {
-        padding:5px 0 3px 5px;
-      }
-
-      :host .search input {
-        background-color:rgba(255,255,255,.1);
-        border-radius:3px;
-        border:1px solid rgba(255,255,255,.15);
-        padding:1px 3px;
-        max-width:120px;
-        color:#fff;
-        font-size:13px;
-      }
-
-      :host .search paper-icon-button {
-        width:22px;height:22px;
-        margin-left:3px;
-        padding:1px;
+        
       }
     </style>
 

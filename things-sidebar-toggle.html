@@ -10,43 +10,17 @@
   <style>
     :host {
       display: block;
-      background-color:var(--paper-blue-grey-800);
-      color:#fff;
     }
-
-    :host iron-icon {
-      width:15px;height:15px;
-      margin-right:4px;
-    }
-    
-    :host .side-toggle {
-      background-color:var(--paper-teal-700);
-    }
-    
-    :host .side-toggle paper-icon-button {
-      width:31px;height:31px;
-      margin-left:3px;
-      padding:0 4px 0 2px;
-    }
-
-    :host .search {
-      padding:5px 0 3px 5px;
-    }
-    
-    :host .search input {
-      background-color:rgba(255,255,255,.1);
-      border-radius:3px;
-      border:1px solid rgba(255,255,255,.15);
-      padding:1px 3px;
-      max-width:120px;
-      color:#fff;
-      font-size:13px;
-    }
-
-    :host .search paper-icon-button {
-      width:22px;height:22px;
-      margin-left:3px;
-      padding:1px;
+    paper-button{
+      background:url(/images/icon-brand.png) 80% 5px no-repeat #346597;
+      width:45px;height:45px;
+      min-width:initial;
+      margin:0;
+      padding:0;
+      position:fixed;
+      top:0;left:0;
+      z-index:1;
+      @apply(--border-radius-clear);
     }
   </style>
 
