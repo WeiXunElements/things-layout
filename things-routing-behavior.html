@@ -25,11 +25,71 @@ Things.RoutingBehavior = {
       if (route) {
         page('/' + screen.routing, me.scrollToTop, () => {
           app.route = screen.routing;
+
+          // Dynamic Menu라면 Element가 등록되었는지 확인한 후 등록이 안 되었다면 등록한다.
+          if(!screen.isRegistered) {
+            if(screen.routing_type == 'DIY') {
+              me._registerDiyScreen(screen);
+
+            } else if(screen.routing_type == 'RESOURCE') {
+              me._registerResourceScreen(screen);
+            }
+
+            screen.isRegistered = true;
+          }
+
+          var eventDetail = { pageName: screen.title, routeInfo: screen.routing };
+          var event = new CustomEvent('things-recent-page-add', { 'detail': eventDetail });
+          document.dispatchEvent(event);          
         });
       }
     });
 
     this.addLastRouting();
+  },
+
+  /**
+   * DIY 타입의 Dynamic Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerDiyScreen: function(menuData) {
+    var content = document.querySelector('#' + this.pageContentId);
+    var screen = document.createElement('things-diy-content');
+    screen.layout = 'fullbleed layout vertical';
+    screen.title = menuData.title;
+    screen.dataRoute = menuData.routing;
+    screen.currentRoute = menuData.routing;
+    screen.resourceUrl = menuData.routing;
+    screen.menuId = menuData.id;
+    Polymer.dom(content).appendChild(screen);
+    Polymer.dom.flush();
+
+    if(screen.initializeContent)
+      screen.initializeContent();
+  },
+
+  /**
+   * RESOURCE 타입의 Dynamic Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerResourceScreen: function(menuData) {
+    var content = document.querySelector('#' + this.pageContentId);
+    var screen = document.createElement('things-resource-content');
+    screen.layout = 'fullbleed layout vertical';
+    screen.title = menuData.title;
+    screen.dataRoute = menuData.routing;
+    screen.currentRoute = menuData.routing;
+    screen.resourceType = menuData.name;
+    screen.resourceUrl = menuData.routing;
+    screen.detailView = menuData.detail_form_id;
+    screen.enableDetailColumn = true;
+    Polymer.dom(content).appendChild(screen);
+    Polymer.dom.flush();
+
+    if(screen.initializeContent)
+      screen.initializeContent();
   },
 
   /**
