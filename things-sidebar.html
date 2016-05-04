@@ -107,27 +107,19 @@
         
         <!-- {{item}} and {{index}} can be used in this binding scope -->
         <paper-button aria-controls={{group.menuGroupId}} on-click="toggle">
-          <iron-icon icon="icons:folder-open"></iron-icon>[[group.title]]
+          <iron-icon icon="icons:folder"></iron-icon>[[group.title]]
         </paper-button>
 
         <iron-collapse id="{{group.menuGroupId}}" tabindex="0">
           <paper-listbox selected-item ="{{_selectedMenu}}" class="content">
             <template is="dom-repeat" items="{{group.child}}" as=item>
-              <paper-item data$="{{item}}">
-                <iron-icon icon="icons:folder-open">
-                </iron-icon>[[item.title]]  
-              </paper-item>
+              <paper-item data$="{{item}}">[[item.title]]</paper-item>
             </template>
           </paper-listbox>
         </iron-collapse>
 
       </template>
     </paper-scroll-header-panel>
-
-    <div class="group-btnline">
-      <paper-icon-button icon="icons:refresh" id="refresh-button" on-tap="refreshmenu">
-      </paper-icon-button>
-    </div>
   </template>
 
   <script>
