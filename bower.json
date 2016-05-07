@@ -1,6 +1,6 @@
 {
   "name": "things-layout",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "authors": [
     "Hatio Lab. <heartyoh@hatiolab.com>"
   ],
@@ -10,9 +10,9 @@
     "polymer",
     "seed"
   ],
-  "main": "things-layout.html",
+  "main": "elements.html",
   "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/ThingsElements/seed-element/",
+  "homepage": "https://github.com/ThingsElements/things-layout/",
   "ignore": [
     "/.*",
     "/test/"
