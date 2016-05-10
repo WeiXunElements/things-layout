@@ -1,0 +1,121 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-form/iron-form.html">
+<link rel="import" href="../paper-input/paper-textarea.html">
+<link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+
+<link rel="import" href="../things-ajax/things-ajax.html">
+<link rel="import" href="../things-input-field/things-input-field.html">
+
+<dom-module id="things-error-page">
+	<template>
+
+		<style>
+		:host {
+			display: block;
+		}
+
+		paper-toolbar{
+			background-color:var(--things-primary-background-color);
+			height:45px;
+		}
+
+		paper-toolbar::shadow #topBar {
+			height:45px;
+		}
+
+		paper-toolbar::shadow .title {
+			margin-left:32px !important;
+		}
+
+		form {
+			@apply(--things-default-padding)
+		}
+		</style>
+
+		<things-ajax 
+			auto
+			id="resource"
+			method="GET"
+			resource-url="[[resourceUrl]]"
+			resource-id="[[resourceId]]"
+			last-response="{{resource}}">
+		</things-ajax>
+
+		<paper-material elevation="1" class="flex">
+			<paper-toolbar>
+				<span class="title">Error : [[resource.id]]</span>
+			</paper-toolbar>
+
+			<div class="layout vertical flex">
+				<form is="iron-form" id="resource-form">
+					<div class="layout horizontal flex">
+						<things-input-field name="code" label="Code" value="{{resource.code}}"></things-input-field>
+						<things-input-field name="status" label="Status" value="{{resource.status}}"></things-input-field>
+					</div>
+					<div class="layout horizontal flex">
+						<things-input-field name="issue_date" label="Issued Date" value="{{resource.issue_date}}"></things-input-field>
+						<things-input-field name="error_type" label="Error Type" value="{{resource.error_type}}"></things-input-field>
+					</div>
+					<div class="layout horizontal flex">
+						<things-input-field name="uri" label="URL" value="{{resource.uri}}"></things-input-field>
+						<things-input-field name="method" label="Method" value="{{resource.method}}"></things-input-field>
+					</div>			
+					<div class="layout horizontal flex">
+						<paper-textarea name="message" label="Message" value="{{resource.message}}"></paper-textarea>
+					</div>
+					<div class="layout vertical flex">
+						<paper-textarea label="Header" value="{{resource.header}}" rows=4></paper-textarea>
+						<paper-textarea label="Parameters" value="{{resource.params}}" rows=4></paper-textarea>
+						<paper-textarea label="Stack Trace" value="{{resource.stack_trace}}" rows=4></paper-textarea>
+					</div>
+				</form>
+			</div>
+		</paper-material>
+
+	</template>
+
+	<script>
+		Polymer({
+
+			is: 'things-error-page',
+
+			properties: {
+
+				resourceId: {
+					type: String
+				},
+
+				resourceUrl: {
+					type: String,
+					computed: '_computeResourceUrl(resourceId)'
+				},				
+
+				resource: {
+					type: Object
+				}
+			},
+
+			attached: function() {
+				var errorId = this._parseErrorId();
+				if(errorId) {
+					this.resourceId = errorId;
+				}
+			},
+
+			_computeResourceUrl: function(resourceId) {
+				return 'error_logs/' + resourceId;
+			},
+
+			_parseErrorId: function() {
+				var url = unescape(location.href);
+				var pm = url.split('?');
+				if(!pm || pm.length <= 1) return;
+				var params = pm[1].split('=');
+				if(!params || params.length <= 1) return;
+				return params[1];
+			}
+
+		});
+	</script>
+</dom-module>
