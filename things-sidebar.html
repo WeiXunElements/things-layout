@@ -50,7 +50,7 @@
         @apply(--border-radius-clear);
       }
       paper-button iron-icon {
-        width: 15px;height: 15px;
+        @apply(--things-small-icon);
         margin-top: -2px;
         margin-right: 4px
       }
@@ -78,10 +78,14 @@
         color:rgba(255,255,255,.8);
         line-height: 2.5 !important
       }
-      
-      :host iron-collapse paper-item:hover,
-      [selected] {
-        
+      paper-item[focused]{
+        color:#fff;
+        font-weight:bold;
+        background-color:rgba(0,0,0,.1);
+      }
+      paper-item[focused]:before{
+        background-color:var(--things-secondary-background-color);
+        opacity:1;
       }
     </style>
 
