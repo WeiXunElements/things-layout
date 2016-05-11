@@ -58,10 +58,12 @@ Things.RoutingBehavior = {
     var screen = document.createElement('things-diy-content');
     screen.layout = 'fullbleed layout vertical';
     screen.title = menuData.title;
-    screen.dataRoute = menuData.routing;
-    screen.currentRoute = menuData.routing;
-    screen.resourceUrl = menuData.routing;
     screen.menuId = menuData.id;
+    screen.idField = menuData.id_field;
+    screen.resourceUrl = menuData.resource_url;
+    screen.dataRoute = menuData.routing;
+    screen.currentRoute = menuData.routing;    
+    screen.detailView = menuData.detail_form_id;
     Polymer.dom(content).appendChild(screen);
     Polymer.dom.flush();
 
@@ -79,10 +81,12 @@ Things.RoutingBehavior = {
     var screen = document.createElement('things-resource-content');
     screen.layout = 'fullbleed layout vertical';
     screen.title = menuData.title;
+    screen.menuId = menuData.id;
+    screen.idField = menuData.id_field;
+    screen.resourceType = menuData.resource_name;
+    screen.resourceUrl = menuData.resource_url;
     screen.dataRoute = menuData.routing;
     screen.currentRoute = menuData.routing;
-    screen.resourceType = menuData.name;
-    screen.resourceUrl = menuData.routing;
     screen.detailView = menuData.detail_form_id;
     screen.enableDetailColumn = true;
     Polymer.dom(content).appendChild(screen);
