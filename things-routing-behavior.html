@@ -33,6 +33,9 @@ Things.RoutingBehavior = {
 
             } else if(screen.routing_type == 'RESOURCE') {
               me._registerResourceScreen(screen);
+
+            } else {
+              me._registerStaticScreen(screen);
             }
 
             screen.isRegistered = true;
@@ -94,6 +97,24 @@ Things.RoutingBehavior = {
 
     if(screen.initializeContent)
       screen.initializeContent();
+  },
+
+  /**
+   * STATIC 타입의 Dynamic Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerStaticScreen: function(menuData) {
+    var content = document.querySelector('#' + this.pageContentId);
+    var screen = document.createElement(menuData.template);
+    screen.menuInfo = menuData;
+    Polymer.dom(content).appendChild(screen);
+    Polymer.dom.flush();
+
+    if(screen.initializeContent) {
+      screen.dataRoute = menuData.routing;
+      screen.initializeContent();
+    }
   },
 
   /**

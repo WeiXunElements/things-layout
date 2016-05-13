@@ -179,27 +179,6 @@
         },
 
         /**
-         * Resource Screen List
-         */
-        resourceScreens: {
-          type: Array,
-          notify: true,
-          value: function() {
-            return [];
-          }
-        },
-
-        /**
-         * Diy Screen List
-         */
-        diyScreens: {
-          type: Array,
-          notify: true,
-          value: function() {
-            return [];
-          }
-        },        
-        /**
          * 현재 선택된 메뉴 정보 
          */
         _selectedMenu: {
@@ -233,7 +212,7 @@
        */
       _onChangeMenu: function(menu) {
         if(menu && menu.items.length > 0) {
-          var groups = [], screens = [], rscScreens = [], diyScreens = [], me = this;
+          var groups = [], screens = [], me = this;
 
           menu.items.forEach(function(item) {
             if (item.menu_type === 'MENU') {
@@ -242,14 +221,6 @@
               groups.push(item);
 
             } else if(item.menu_type === 'SCREEN') {
-              if(item.routing_type) {
-                if(item.routing_type == 'RESOURCE') {
-                  rscScreens.push(item);
-                } else if(item.routing_type == 'DIY') {
-                  diyScreens.push(item);
-                }
-              }
-
               screens.push(item);
             }
           });
@@ -260,8 +231,6 @@
 
           this.menuGroup = groups;
           this.screens = screens;
-          this.resourceScreens = rscScreens;
-          this.diyScreens = diyScreens;          
         }
       },
 
