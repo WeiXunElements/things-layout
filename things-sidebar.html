@@ -88,6 +88,9 @@
         background-color:var(--things-secondary-background-color);
         opacity:1;
       }
+      paper-card {
+        display:block !important;
+      }
     </style>
 
     <things-ajax
@@ -109,22 +112,31 @@
     <paper-scroll-header-panel id = "panel">
 
       <content></content>
-
       <template is="dom-repeat" items="{{menuGroup}}" as=group>
-        
-        <!-- {{item}} and {{index}} can be used in this binding scope -->
-        <paper-button aria-controls={{group.menuGroupId}} on-click="toggle">
-          <iron-icon icon="icons:folder"></iron-icon>[[group.title]]
-        </paper-button>
+        <!-- Standard Menu -->
+        <template is="dom-if" if={{isStandard}}>
+          <paper-button aria-controls={{group.menuGroupId}} on-click="toggle">
+            <iron-icon icon="icons:folder"></iron-icon>[[group.title]]
+          </paper-button>
 
-        <iron-collapse id="{{group.menuGroupId}}" tabindex="0">
-          <paper-listbox selected-item ="{{_selectedMenu}}" class="content">
-            <template is="dom-repeat" items="{{group.child}}" as=item>
-              <paper-item data$="{{item}}" on-tap="_onSelectedMenuChange">[[item.title]]</paper-item>
-            </template>
-          </paper-listbox>
-        </iron-collapse>
-
+          <iron-collapse id="{{group.menuGroupId}}" tabindex="0">
+            <paper-listbox selected-item ="{{_selectedMenu}}" class="content">
+              <template is="dom-repeat" items="{{group.child}}" as=item>
+                <paper-item data$="{{item}}" on-tap="_onSelectedMenuChange">[[item.title]]</paper-item>
+              </template>
+            </paper-listbox>
+          </iron-collapse>
+        </template>
+        <!-- Terminal Menu -->
+        <template is="dom-if" if={{isTerminal}}>
+          <template is="dom-repeat" items="{{group.child}}" as=item>
+            <paper-card data$="{{item}}" 
+                        on-tap="_onSelectedMenuChange" 
+                        heading="[[item.name]]" 
+                        image="[[_computeIconpath(item.icon_path)]]">
+            </paper-card>
+          </template>
+        </template>
       </template>
     </paper-scroll-header-panel>
   </template>
@@ -133,6 +145,10 @@
     Polymer({
       is: 'things-sidebar',
       properties: {
+        menuCategory:{
+          type: String,
+          value: 'STANDARD'
+        },
         /**
          * 동적으로 메뉴 화면을 iron-pages내 content로 추가하기 위한 id 정보 
          */
@@ -166,9 +182,8 @@
          */
         queryFields : {
           type: Array,
-          value : '[{ name :"category",operator:"noteq", value:"TERMINAL"}]'
+          computed:'_computedQuery(menuCategory)'
         },
-        
         /**
          * menu group returns menu tree as Array
          * [ { 
@@ -253,10 +268,31 @@
        * @param  {String}
        */
       _onSelectedMenuChange: function(e) {
-        this._selectedMenu = e.target;
-        var data = JSON.parse(e.target.getAttribute("data"));
+        this._selectedMenu = e.currentTarget;
+        var data = JSON.parse(this._selectedMenu.getAttribute("data"));
         var url = '/' + (data.routing ? data.routing : '');
         page(url);
+      },
+      /**
+       * 메뉴 검색 조건 생성
+       * 
+       */
+      _computedQuery: function(menuCategory){
+        if(menuCategory==='STANDARD'){
+          this.isStandard = true;
+          this.isTerminal = false;
+        }else if(menuCategory==='TERMINAL'){
+          this.isStandard = false;
+          this.isTerminal = true;
+        };
+
+        return '[{ name :"category", operator:"eq", value:'+menuCategory+'}]';
+      },
+      /**
+       * icon Path 구성
+       */
+      _computeIconpath: function(icon){
+        return this.globals.baseUrl+'/download/'+icon;
       },
       /**
        * Refresh menu content
