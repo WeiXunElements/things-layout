@@ -16,7 +16,6 @@
   1.things-routing-behavior.html를 사용하여 Routing 등록 및 설정을 수행한다.
   2.action에서 제공하는 Url로 Menu를 검색하여 Routing 등록 및 화면 좌측에 메뉴로 제공한다.
   3.메뉴성이기에 Drawer Attribute가 꼭 필요하다.
-
   Example:
     <things-sidebar drawer class="layout vertical" 
       title="MENU" screens="{{screens}}" action="menus.json?mode=auth">
@@ -33,6 +32,7 @@
       }
       paper-scroll-header-panel {
         height: 100%;
+        @apply(--things-sidebar-panel);
       }
       .brand {
         background:#1D4667;
@@ -120,7 +120,7 @@
         <iron-collapse id="{{group.menuGroupId}}" tabindex="0">
           <paper-listbox selected-item ="{{_selectedMenu}}" class="content">
             <template is="dom-repeat" items="{{group.child}}" as=item>
-              <paper-item data$="{{item}}">[[item.title]]</paper-item>
+              <paper-item data$="{{item}}" on-tap="_onSelectedMenuChange">[[item.title]]</paper-item>
             </template>
           </paper-listbox>
         </iron-collapse>
@@ -132,9 +132,7 @@
   <script>
     Polymer({
       is: 'things-sidebar',
-
       properties: {
-
         /**
          * 동적으로 메뉴 화면을 iron-pages내 content로 추가하기 위한 id 정보 
          */
@@ -149,7 +147,6 @@
         title: {
           type: String
         },
-
         /**
          * url that where the menu data get from
          */
@@ -157,7 +154,6 @@
           type: String,
           value:'menus.json?mode=auth'
         },
-
         /**
          * action that where the menu data get
          */
@@ -165,7 +161,6 @@
           type: String,
           value:'index'
         },
-
         /**
          * query condition for query menu data
          */
@@ -186,7 +181,6 @@
           type: Array,
           notify: true
         },
-
         /**
          * 메뉴 리스트 중에 App 안에 나타날 실제 화면 (menu_type이 'SCREEN') 정보.
          * 화면 정보들만 라우팅에 추가된다.
@@ -196,7 +190,6 @@
           notify: true,
           value :[]
         },
-
         /**
          * 현재 선택된 메뉴 정보 
          */
@@ -204,17 +197,13 @@
           type: Object
         }
       },
-
       observers: [
-        '_onChangeMenu(menu)',
-        '_onSelectedMenuChange(_selectedMenu)'
+        '_onChangeMenu(menu)'
       ],
-
       behaviors: [
         Things.RoutingBehavior,
         Things.GlobalBehavior
       ],
-
       /**
        * Life Cycle
        */
@@ -232,27 +221,22 @@
       _onChangeMenu: function(menu) {
         if(menu && menu.items.length > 0) {
           var groups = [], screens = [], me = this;
-
           menu.items.forEach(function(item) {
             if (item.menu_type === 'MENU') {
               item.child = me._getChildMenu(item, menu.items);
               item.menuGroupId = 'group' + item.id;
               groups.push(item);
-
             } else if(item.menu_type === 'SCREEN') {
               screens.push(item);
             }
           });
-
           // ******** Routing 초기화 ***********
           this.init(screens, 'home', 'login');
           // *********************************
-
           this.menuGroup = groups;
           this.screens = screens;
         }
       },
-
       /**
        * Filter child menu and return it
        * @param  {Array} parent group id
@@ -264,19 +248,15 @@
           return (item && item.menu_type === 'SCREEN' && item.parent_id === menuGroup.id);
         });
       },
-
       /**
        * When selected menu changed route screen to the menu screen
        * @param  {String}
        */
-      _onSelectedMenuChange: function(selectedMenu) {
-        if(selectedMenu) {
-          var data = JSON.parse(selectedMenu.getAttribute("data"));
+      _onSelectedMenuChange: function(e) {
+          var data = JSON.parse(e.target.getAttribute("data"));
           var url = '/' + (data.routing ? data.routing : '');
           page(url);
-        }
       },
-
       /**
        * Refresh menu content
        * @param {Object} e 버튼 클릭 이벤트 
@@ -293,7 +273,6 @@
       toggle: function(e) {
         this.$$('#' + e.target.ariaControls).toggle();
       }
-
     });
   </script>
 </dom-module>
