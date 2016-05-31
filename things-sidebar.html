@@ -253,9 +253,10 @@
        * @param  {String}
        */
       _onSelectedMenuChange: function(e) {
-          var data = JSON.parse(e.target.getAttribute("data"));
-          var url = '/' + (data.routing ? data.routing : '');
-          page(url);
+        this._selectedMenu = e.target;
+        var data = JSON.parse(e.target.getAttribute("data"));
+        var url = '/' + (data.routing ? data.routing : '');
+        page(url);
       },
       /**
        * Refresh menu content
