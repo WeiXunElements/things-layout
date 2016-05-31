@@ -93,9 +93,11 @@
     <things-ajax
       auto
       id="refresh"
-      resource-url="{{action}}"
+      resource-url="[[resourceUrl]]"
+      resource-action="[[resourceAction]]"
       method="GET"
-      content-type="application/json" 
+      query-fields="[[queryFields]]"
+      content-type="application/json"
       last-response="{{menu}}">
     </things-ajax>
 
@@ -151,8 +153,25 @@
         /**
          * url that where the menu data get from
          */
-        action: {
-          type: String
+        resourceUrl: {
+          type: String,
+          value:'menus.json?mode=auth'
+        },
+
+        /**
+         * action that where the menu data get
+         */
+        resourceAction: {
+          type: String,
+          value:'index'
+        },
+
+        /**
+         * query condition for query menu data
+         */
+        queryFields : {
+          type: Array,
+          value : '[{ name :"category",operator:"noteq", value:"TERMINAL"}]'
         },
         
         /**
