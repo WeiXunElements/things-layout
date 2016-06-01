@@ -109,9 +109,10 @@
     </div>
 
     <!-- Drawer Scroll Header Panel -->
-    <paper-scroll-header-panel id = "panel">
+    <paper-scroll-header-panel id="panel">
 
       <content></content>
+
       <template is="dom-repeat" items="{{menuGroup}}" as=group>
         <!-- Standard Menu -->
         <template is="dom-if" if={{isStandard}}>
@@ -127,6 +128,7 @@
             </paper-listbox>
           </iron-collapse>
         </template>
+
         <!-- Terminal Menu -->
         <template is="dom-if" if={{isTerminal}}>
           <template is="dom-repeat" items="{{group.child}}" as=item>
@@ -144,11 +146,16 @@
   <script>
     Polymer({
       is: 'things-sidebar',
+
       properties: {
-        menuCategory:{
+        /**
+         * 메뉴 카테고리 - UI / OI 구분을 위한 메뉴 데이터 조회 파라미터 
+         */        
+        menuCategory: {
           type: String,
           value: 'STANDARD'
         },
+        
         /**
          * 동적으로 메뉴 화면을 iron-pages내 content로 추가하기 위한 id 정보 
          */
@@ -163,6 +170,7 @@
         title: {
           type: String
         },
+        
         /**
          * url that where the menu data get from
          */
@@ -170,6 +178,7 @@
           type: String,
           value:'menus.json?mode=auth'
         },
+        
         /**
          * action that where the menu data get
          */
@@ -177,6 +186,7 @@
           type: String,
           value:'index'
         },
+        
         /**
          * query condition for query menu data
          */
@@ -184,6 +194,7 @@
           type: Array,
           computed:'_computedQuery(menuCategory)'
         },
+        
         /**
          * menu group returns menu tree as Array
          * [ { 
@@ -196,6 +207,7 @@
           type: Array,
           notify: true
         },
+        
         /**
          * 메뉴 리스트 중에 App 안에 나타날 실제 화면 (menu_type이 'SCREEN') 정보.
          * 화면 정보들만 라우팅에 추가된다.
@@ -205,6 +217,7 @@
           notify: true,
           value :[]
         },
+
         /**
          * 현재 선택된 메뉴 정보 
          */
@@ -212,13 +225,16 @@
           type: Object
         }
       },
+
       observers: [
         '_onChangeMenu(menu)'
       ],
+      
       behaviors: [
         Things.RoutingBehavior,
         Things.GlobalBehavior
       ],
+      
       /**
        * Life Cycle
        */
@@ -252,6 +268,7 @@
           this.screens = screens;
         }
       },
+
       /**
        * Filter child menu and return it
        * @param  {Array} parent group id
@@ -263,6 +280,7 @@
           return (item && item.menu_type === 'SCREEN' && item.parent_id === menuGroup.id);
         });
       },
+
       /**
        * When selected menu changed route screen to the menu screen
        * @param  {String}
@@ -273,29 +291,35 @@
         var url = '/' + (data.routing ? data.routing : '');
         page(url);
       },
+
       /**
        * 메뉴 검색 조건 생성
        * 
+       * @param {String} menuCategory
        */
-      _computedQuery: function(menuCategory){
-        if(menuCategory==='STANDARD'){
+      _computedQuery: function(menuCategory) {
+        if(menuCategory === 'STANDARD') {
           this.isStandard = true;
           this.isTerminal = false;
-        }else if(menuCategory==='TERMINAL'){
+
+        } else if(menuCategory === 'TERMINAL') {
           this.isStandard = false;
           this.isTerminal = true;
         };
 
-        return '[{ name :"category", operator:"eq", value:'+menuCategory+'}]';
+        return '[{ name :"category", operator:"eq", value:' + menuCategory + '}]';
       },
+
       /**
        * icon Path 구성
        */
       _computeIconpath: function(icon){
-        return this.globals.baseUrl+'/download/'+icon;
+        return this.globals.baseUrl + '/download/' + icon;
       },
+
       /**
        * Refresh menu content
+       *
        * @param {Object} e 버튼 클릭 이벤트 
        */
       refreshmenu: function(e) {

@@ -1,3 +1,5 @@
+<link rel="import" href="../things-detail/things-menu-detail-view.html">
+
 <script>
 'use strict';
 
@@ -11,7 +13,8 @@ window.Things = window.Things || {};
 Things.RoutingBehavior = {
 
   /**
-   * initialize routings
+   * Initialize routings
+   *
    * @param {Array} Menu screen array
    * @param {String} Defualt routing name
    * @param {String} Login routing name  
@@ -30,7 +33,6 @@ Things.RoutingBehavior = {
           if(!screen.isRegistered) {
             if(screen.routing_type == 'DIY' || screen.routing_type == 'RESOURCE') {
               me._registerResourceScreen(screen);
-
             } else {
               me._registerStaticScreen(screen);
             }
@@ -38,9 +40,11 @@ Things.RoutingBehavior = {
             screen.isRegistered = true;
           }
 
-          var eventDetail = { pageName: screen.title, routeInfo: screen.routing };
-          var event = new CustomEvent('things-recent-page-add', { 'detail': eventDetail });
-          document.dispatchEvent(event);          
+          if(screen.category == 'STANDARD') {
+            var eventDetail = { pageName: screen.title, routeInfo: screen.routing };
+            var event = new CustomEvent('things-recent-page-add', { 'detail': eventDetail });
+            document.dispatchEvent(event);
+          }          
         });
       }
     });
@@ -49,27 +53,13 @@ Things.RoutingBehavior = {
   },
 
   /**
-   * DIY 타입의 Dynamic Screen을 등록한다.
-   * 
-   * @param {Object} menuData
-   */
-  /*_registerDiyScreen: function(menuData) {
-    var content = document.querySelector('#' + this.pageContentId);
-    var screen = document.createElement('things-diy-menu-content');
-    screen.menuInfo = menuData;
-    screen.dataRoute = menuData.routing;
-    Polymer.dom(content).appendChild(screen);
-    Polymer.dom.flush();
-  },*/
-
-  /**
    * RESOURCE 타입의 Dynamic Screen을 등록한다.
    * 
    * @param {Object} menuData
    */
   _registerResourceScreen: function(menuData) {
     var content = document.querySelector('#' + this.pageContentId);
-    var screen = document.createElement('things-resource-menu-content');
+    var screen = (menuData.category == 'TERMINAL') ? document.createElement('things-menu-detail-view') : document.createElement('things-resource-menu-content');
     screen.menuInfo = menuData;
     screen.dataRoute = menuData.routing;
     Polymer.dom(content).appendChild(screen);
@@ -77,17 +67,22 @@ Things.RoutingBehavior = {
   },
 
   /**
-   * STATIC 타입의 Dynamic Screen을 등록한다.
+   * STATIC 타입의 Screen을 등록한다.
    * 
    * @param {Object} menuData
    */
   _registerStaticScreen: function(menuData) {
-    var content = document.querySelector('#' + this.pageContentId);
-    var screen = document.createElement(menuData.template);
-    screen.menuInfo = menuData;
-    screen.dataRoute = menuData.routing;
-    Polymer.dom(content).appendChild(screen);
-    Polymer.dom.flush();
+    if(menuData.category == 'TERMINAL') {
+      // TODO things-menu-detail-opener 참조 
+
+    } else {
+      var content = document.querySelector('#' + this.pageContentId);
+      var screen = document.createElement(menuData.template);
+      screen.menuInfo = menuData;
+      screen.dataRoute = menuData.routing;
+      Polymer.dom(content).appendChild(screen);
+      Polymer.dom.flush();
+    }
   },
 
   /**
@@ -128,4 +123,5 @@ Things.RoutingBehavior = {
     });
   }
 };
+
 </script>
