@@ -8,6 +8,7 @@
 <link rel="import" href="../things-ajax/things-ajax.html">
 <link rel="import" href="../things-global-behavior/things-global-behavior.html">
 <link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
+<link rel="import" href="../things-image-button/things-image-button.html">
 
 <link rel="import" href="./things-routing-behavior.html">
 
@@ -88,7 +89,7 @@
         background-color:var(--things-secondary-background-color);
         opacity:1;
       }
-      paper-card {
+      iron-image {
         display:block !important;
       }
     </style>
@@ -123,7 +124,9 @@
           <iron-collapse id="{{group.menuGroupId}}" tabindex="0">
             <paper-listbox selected-item ="{{_selectedMenu}}" class="content">
               <template is="dom-repeat" items="{{group.child}}" as=item>
-                <paper-item data$="{{item}}" on-tap="_onSelectedMenuChange">[[item.title]]</paper-item>
+                <a href="[[item.routing]]">
+                  <paper-item data$="{{item}}">[[item.title]]</paper-item>
+                </a>
               </template>
             </paper-listbox>
           </iron-collapse>
@@ -132,11 +135,12 @@
         <!-- Terminal Menu -->
         <template is="dom-if" if={{isTerminal}}>
           <template is="dom-repeat" items="{{group.child}}" as=item>
-            <paper-card data$="{{item}}" 
-                        on-tap="_onSelectedMenuChange" 
-                        heading="[[item.name]]" 
-                        image="[[_computeIconpath(item.icon_path)]]">
-            </paper-card>
+            <a href="[[item.routing]]">
+              <things-image-button  
+                  item = "[[item]]"
+                  image-src ="[[_computeIconpath(item.icon_path)]]">
+              </things-image-button>
+            </a>
           </template>
         </template>
       </template>
@@ -285,12 +289,12 @@
        * When selected menu changed route screen to the menu screen
        * @param  {String}
        */
-      _onSelectedMenuChange: function(e) {
-        this._selectedMenu = e.currentTarget;
-        var data = JSON.parse(this._selectedMenu.getAttribute("data"));
-        var url = '/' + (data.routing ? data.routing : '');
-        page(url);
-      },
+      // _onSelectedMenuChange: function(e) {
+        // this._selectedMenu = e.currentTarget;
+        // var data = JSON.parse(this._selectedMenu.getAttribute("data"));
+        // var url = '/' + (data.routing ? data.routing : '');
+        // page(url);
+      // },
 
       /**
        * 메뉴 검색 조건 생성
