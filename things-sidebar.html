@@ -50,7 +50,7 @@
         text-align: left;
         @apply(--border-radius-clear);
       }
-      iron-collapse:focus{outline:none;}
+      iron-collapse:focus,a:focus{outline:none;}
       paper-button iron-icon {
         @apply(--things-small-icon);
         margin-top: -2px;
@@ -91,6 +91,11 @@
       }
       iron-image {
         display:block !important;
+      }
+      .things-image-button{
+        display:block;
+        text-align:center;
+        text-decoration:none;
       }
     </style>
 
@@ -135,7 +140,7 @@
         <!-- Terminal Menu -->
         <template is="dom-if" if={{isTerminal}}>
           <template is="dom-repeat" items="{{group.child}}" as=item>
-            <a href="[[item.routing]]">
+            <a href="[[item.routing]]" class="things-image-button">
               <things-image-button  
                   item = "[[item]]"
                   title ="[[item.title]]"
