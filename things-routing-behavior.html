@@ -1,166 +1,133 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../things-detail/things-menu-detail-view.html">
 
-<link rel="import" href="../iron-localstorage/iron-localstorage.html">
-<link rel="import" href="../paper-item/paper-item.html">
+<script>
+'use strict';
 
-<!--
-`<things-recent-page>` Things Recent Page
-  Example
-    
-    <things-recent-page max-count=20></things-recent-page>
+window.Things = window.Things || {};
+/**
+ * This behavior is for routing registration when menu or other element need to use routing registration.
+ * On standard we used this behavior on things-sidebar.html
+ * 
+ * @polymerBehavior Things.RoutingBehavior
+ */
+Things.RoutingBehavior = {
+  properties:{
+    /**
+     * 현재 선택된 메뉴 정보 
+     */
+    selectedMenu: {
+      type: Object
+    }
+  },
+  /**
+   * Initialize routings
+   *
+   * @param {Array} Menu screen array
+   * @param {String} Defualt routing name
+   * @param {String} Login routing name  
+   */
+  init: function(screens, defaultRouting, loginRouting) {
+    var me = this;
+    this.addDefaultRouting(defaultRouting, loginRouting);
 
-@demo demo/index.html
--->
-<dom-module id="things-recent-page">
-  <template>
-    <style>
-    :host{
-      background-color:var(--things-sidebar-background-color);
-      @apply(--layout-vertical);
-      --paper-item-min-height:30px;
-    }
-    div{
-      @apply(--layout-flex);
-      border-left:1px solid var(--things-lightgrey-background-color);
-    }
-    label{
-      background-color:var(--things-primary-background-color);
-      display:block;
-      width:100%;height:45px;
-      border-left:1px solid var(--things-lightgrey-background-color);
-      color:#fff;
-      font-size:12px;
-      text-transform:capitalize;
-      font-weight:300;
-      line-height:45px;
-      text-indent:10px;
-    }
-    paper-item{
-      padding:0 10px;
-      color:var(--things-dark-text-color);
-      font-size:11px;
-      line-height:1.2;
-    }
-    paper-item[active]{
-      color:var(--paper-grey-900);
-      font-weight:700;
-    }
-    paper-item:before{
-      content:"";
-      @apply(--things-dot-lightgrey)
-    }
-    paper-item[active]:before{
-      background-color:var(--things-secondary-background-color);
-    }
-    paper-icon-button{
-      @apply(--things-tiny-icon);
-      opacity:.4;
-      margin-left:3px;
-      min-width:12px;
-    }
-    </style>
-    
-    <label>recent task</label>
-    <div>
-      <template is="dom-repeat" items="[[recentPages]]">    
-        <paper-item active="[[itemActive(index)]]">
-            <paper-item-body on-tap="routing">[[item.pageName]]</paper-item-body>
-            <paper-icon-button icon="icons:cancel" on-tap="deletePage"></paper-icon-button>
-        </paper-item>
-      </template>
-    </div>
+    screens.forEach(function(screen) {
+      var route = screen.routing;
+      if (route) {
+        page('/' + screen.routing, me.scrollToTop, () => {
+          app.route = screen.routing;
 
-    <iron-localstorage
-      id="local-storage"
-      name="recentPages"
-      value="{{recentPages}}">
-    </iron-localstorage>
-  </template>
+          // Dynamic Menu라면 Element가 등록되었는지 확인한 후 등록이 안 되었다면 등록한다.
+          if(!screen.isRegistered) {
+            if(screen.routing_type == 'DIY' || screen.routing_type == 'RESOURCE') {
+              me._registerResourceScreen(screen);
+            } else {
+              me._registerStaticScreen(screen);
+            }
 
-  <script>
-    Polymer({
-      is: 'things-recent-page',
-
-      properties: {
-
-        /**
-         * local storage에 저장되는 최근 방문 페이지의 
-         * pageName과 routeInfo
-         */
-        recentPages: {
-          type: Array,
-          value: function() {
-            return [];
+            screen.isRegistered = true;
           }
-        },
 
-        /**
-         * local storage의 저장 가능한 목록수
-         */
-        maxCount: {
-          type: Number,
-          value: 10
-        }
-      },
 
-      /**
-       * page 전환시 발생하는 event Listener
-       */
-      attached: function() {
-        document.addEventListener('things-routing-changed', function(event) {
-          var request = event.detail;
+          var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category };
 
-          if(request.category==='STANDARD') 
-            this.addPage(request.pageName, request.routeInfo);
-          
-        }.bind(this));
-      },
+          me.selectedMenu = eventDetail;
 
-      /**
-       * 새로 추가된 pageName, routeInfo를 첫번째 index에 추가하고 index값이 maxCount를 넘어서는 것은 삭제 
-       */
-      addPage: function(pageName, routeInfo) {
-        var newItem = { pageName : pageName, routeInfo : routeInfo, active:true };
-        if(!this.recentPages||!this.recentPages.length) this.recentPages = [];
-        var alreadyAddedIdx = this.recentPages.map(function(page) { return page.pageName; }).indexOf(pageName);
-
-        // 페이지가 등록되어 있으면 먼저 해당 페이지를 삭제
-        if(alreadyAddedIdx >= 0) {
-          this.splice('recentPages', alreadyAddedIdx, 1);
-        } 
-
-        // 새로운 페이지 등록 
-        this.unshift('recentPages', newItem);
-
-        // 총 페이지가 Max Count보다 크다면 맨 마지막 1개 삭제 
-        while(this.recentPages.length > this.maxCount) {
-          this.splice('recentPages', -1, 1);
-        }
-
-        // this.disactivePage();
-        // this.activing = newItem;
-      },
-
-      /**
-       * 삭제 버튼 클릭시 실행되며 해당 item의 index를 통해 local storage에서 삭제
-       */
-      deletePage: function(event) {
-        var idx = event.model.index;
-        this.splice('recentPages', idx, 1);
-      },
-
-      /**
-       * 화면에 출력된 pageName 클릭시 해당 페이지로 이동
-       */
-      routing: function(event) {
-        var item = event.model.item;
-        page('/' + item.routeInfo);
-      },
-
-      itemActive: function(index){
-        return index===0;
+          var event = new CustomEvent('things-routing-changed', { 'detail': eventDetail });
+          document.dispatchEvent(event);
+        });
       }
-
     });
-  </script>
-</dom-module>
+
+    this.addLastRouting();
+  },
+
+  /**
+   * RESOURCE 타입의 Dynamic Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerResourceScreen: function(menuData) {
+    var content = document.querySelector('#' + this.pageContentId);
+    var screenName = (menuData.category == 'TERMINAL') ? 
+                     'things-menu-detail-view' : 'things-resource-menu-content';
+    var screen = document.createElement(screenName);
+    screen.menuInfo = menuData;
+    screen.dataRoute = menuData.routing;
+    Polymer.dom(content).appendChild(screen);
+    Polymer.dom.flush();
+  },
+
+  /**
+   * STATIC 타입의 Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerStaticScreen: function(menuData) {
+    var content = document.querySelector('#' + this.pageContentId);
+    var screen = document.createElement(menuData.template);
+    screen.menuInfo = menuData;
+    screen.dataRoute = menuData.routing;
+    Polymer.dom(content).appendChild(screen);
+    Polymer.dom.flush();
+  },
+
+  /**
+   * move screen scroll to top
+   */
+  scrollToTop: function(ctx, next) {
+    //app.scrollPageToTop();
+    next();
+  },
+
+  /**
+   *  add default routing
+   *  @param {String} Default routing name
+   */
+  addDefaultRouting: function(defaultRouting, loginRouting) {
+    page('/', this.scrollToTop, () => {
+      app.route = defaultRouting;
+    });
+
+    page('/login', this.scrollToTop, () => {
+      app.route = loginRouting;
+    });
+  },
+
+  /**
+   * add last routing, when page not foud redirect to home
+   */
+  addLastRouting: function() {
+    page('*', function(attempted) {
+      let url = window.location.href + attempted.path.substr(1);
+      // app.$.toastConfirm.text = `Can't find: ${url}. Redirected you to Home Page`;
+      // app.$.toastConfirm.show();
+      page.redirect('/');
+    });
+    
+    page({
+      hashbang: true
+    });
+  }
+};
+
+</script>
