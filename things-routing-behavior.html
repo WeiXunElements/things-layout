@@ -68,8 +68,8 @@ Things.RoutingBehavior = {
    */
   _registerResourceScreen: function(menuData) {
     var content = document.querySelector('#' + this.pageContentId);
-    var screenName = (menuData.category == 'TERMINAL') ? 
-                     'things-menu-detail-view' : 'things-resource-menu-content';
+    var screenName = (menuData.category == 'TERMINAL') ? 'things-menu-detail-view' : 
+                     (menuData.resource_type == 'DIY_GRID' ? 'things-report-content' : 'things-resource-menu-content');
     var screen = document.createElement(screenName);
     screen.menuInfo = menuData;
     screen.dataRoute = menuData.routing;
