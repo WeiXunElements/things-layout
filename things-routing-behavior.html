@@ -33,7 +33,7 @@ Things.RoutingBehavior = {
     screens.forEach(function(screen) {
       var route = screen.routing;
       if (route) {
-        page('/' + screen.routing, me.scrollToTop, () => {
+        page('/' + screen.routing, me.scrollToTop, function() {
           app.route = screen.routing;
 
           // Dynamic Menu라면 Element가 등록되었는지 확인한 후 등록이 안 되었다면 등록한다.
@@ -104,11 +104,11 @@ Things.RoutingBehavior = {
    *  @param {String} Default routing name
    */
   addDefaultRouting: function(defaultRouting, loginRouting) {
-    page('/', this.scrollToTop, () => {
+    page('/', this.scrollToTop, function() {
       app.route = defaultRouting;
     });
 
-    page('/login', this.scrollToTop, () => {
+    page('/login', this.scrollToTop, function() {
       app.route = loginRouting;
     });
   },
@@ -118,7 +118,7 @@ Things.RoutingBehavior = {
    */
   addLastRouting: function() {
     page('*', function(attempted) {
-      let url = window.location.href + attempted.path.substr(1);
+      var url = window.location.href + attempted.path.substr(1);
       // app.$.toastConfirm.text = `Can't find: ${url}. Redirected you to Home Page`;
       // app.$.toastConfirm.show();
       page.redirect('/');
