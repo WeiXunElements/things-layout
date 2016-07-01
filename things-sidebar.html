@@ -319,7 +319,7 @@
           this.isTerminal = true;
         };
 
-        return '[{ name :"category", operator:"eq", value:' + menuCategory + '}]';
+        return '[{ name: "category", operator: "eq", value: ' + menuCategory + '}, { name: "hidden_flag", operator: "is_not_true" }]';
       },
 
       /**
