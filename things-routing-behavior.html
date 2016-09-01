@@ -4,6 +4,7 @@
 'use strict';
 
 window.Things = window.Things || {};
+
 /**
  * This behavior is for routing registration when menu or other element need to use routing registration.
  * On standard we used this behavior on things-sidebar.html
@@ -11,6 +12,7 @@ window.Things = window.Things || {};
  * @polymerBehavior Things.RoutingBehavior
  */
 Things.RoutingBehavior = {
+
   properties:{
     /**
      * 현재 선택된 메뉴 정보 
@@ -19,6 +21,7 @@ Things.RoutingBehavior = {
       type: Object
     }
   },
+
   /**
    * Initialize routings
    *
@@ -47,11 +50,8 @@ Things.RoutingBehavior = {
             screen.isRegistered = true;
           }
 
-
           var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category };
-
           me.selectedMenu = eventDetail;
-
           var event = new CustomEvent('things-routing-changed', { 'detail': eventDetail });
           document.dispatchEvent(event);
         });

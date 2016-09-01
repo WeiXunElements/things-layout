@@ -110,16 +110,13 @@
       method="GET"
       query-fields="[[queryFields]]"
       content-type="application/json"
-      last-response="{{menu}}">
+      last-response="{{menus}}">
     </things-ajax>
 
-    <div class="brand">
-      <things-i18n-msg msgid="title.[[title]]" auto></things-i18n-msg>
-    </div>
+    <div class="brand"><things-i18n-msg msgid="title.[[title]]" auto></things-i18n-msg></div>
 
     <!-- Drawer Scroll Header Panel -->
     <paper-scroll-header-panel id="panel">
-
       <content></content>
 
       <template is="dom-repeat" items="{{menuGroup}}" as=group>
@@ -145,9 +142,9 @@
           <template is="dom-repeat" items="{{group.child}}" as=item>
             <a href="[[item.routing]]" class="things-image-button">
               <things-image-button  
-                  item = "[[item]]"
-                  title ="[[item.title]]"
-                  image-src ="[[_computeIconpath(item.icon_path)]]">
+                  item="[[item]]"
+                  title="[[item.title]]"
+                  image-src="[[_computeIconpath(item.icon_path)]]">
               </things-image-button>
             </a>
           </template>
@@ -189,7 +186,8 @@
          */
         resourceUrl: {
           type: String,
-          value:'menus.json?mode=auth'
+          value: 'menus/user_menus/STANDARD',
+          computed: '_computedMenuUrl(menuCategory)'
         },
         
         /**
@@ -197,7 +195,7 @@
          */
         resourceAction: {
           type: String,
-          value:'index'
+          value: 'index'
         },
         
         /**
@@ -205,7 +203,7 @@
          */
         queryFields : {
           type: Array,
-          computed:'_computedQuery(menuCategory)'
+          computed: '_computedQuery(menuCategory)'
         },
         
         /**
@@ -220,6 +218,14 @@
           type: Array,
           notify: true
         },
+
+        /**
+         * 사용자 권한에 따른 메뉴 리스트 
+         */
+        menus: {
+          type: Array,
+          value: []
+        },
         
         /**
          * 메뉴 리스트 중에 App 안에 나타날 실제 화면 (menu_type이 'SCREEN') 정보.
@@ -228,7 +234,7 @@
         screens: {
           type: Array,
           notify: true,
-          value :[]
+          value: []
         },
 
         /**
@@ -240,7 +246,7 @@
       },
 
       observers: [
-        '_onChangeMenu(menu)'
+        '_onChangeMenus(menus)'
       ],
       
       behaviors: [
@@ -262,18 +268,20 @@
        * 
        * @param {Object} 메뉴 정보 menu.total : 총 메뉴 개수, menu.items : 메뉴 리스트 
        */
-      _onChangeMenu: function(menu) {
-        if(menu && menu.items.length > 0) {
+      _onChangeMenus: function(menus) {
+        if(menus && menus.length > 0) {
           var groups = [], screens = [], me = this;
-          menu.items.forEach(function(item) {
+
+          menus.forEach(function(item) {
             if (item.menu_type === 'MENU') {
-              item.child = me._getChildMenu(item, menu.items);
+              item.child = me._getChildMenu(item, menus);
               item.menuGroupId = 'group' + item.id;
               groups.push(item);
             } else if(item.menu_type === 'SCREEN') {
               screens.push(item);
             }
           });
+
           // ******** Routing 초기화 ***********
           this.init(screens, 'home', 'login');
           // *********************************
@@ -283,7 +291,8 @@
       },
 
       /**
-       * Filter child menu and return it
+       * Find child menu and return it
+       *
        * @param  {Array} parent group id
        * @param  {Array} all menu list
        * @return {Array} child screen array
@@ -295,15 +304,13 @@
       },
 
       /**
-       * When selected menu changed route screen to the menu screen
-       * @param  {String}
+       * 메뉴 URL 생성
+       * 
+       * @param {String} menuCategory
        */
-      // _onSelectedMenuChange: function(e) {
-        // this._selectedMenu = e.currentTarget;
-        // var data = JSON.parse(this._selectedMenu.getAttribute("data"));
-        // var url = '/' + (data.routing ? data.routing : '');
-        // page(url);
-      // },
+      _computedMenuUrl: function(menuCategory) {
+        return 'menus/user_menus/' + menuCategory;
+      },
 
       /**
        * 메뉴 검색 조건 생성
@@ -328,16 +335,6 @@
        */
       _computeIconpath: function(icon){
         return this.globals.baseUrl + '/download/' + icon;
-      },
-
-      /**
-       * Refresh menu content
-       *
-       * @param {Object} e 버튼 클릭 이벤트 
-       */
-      refreshmenu: function(e) {
-        // TODO Check 메뉴를 리프레쉬하면 라우팅도 중복되어 추가될 듯 한데 체크 필요 
-        this.$.refresh.generateRequest();
       },
       
       /**
