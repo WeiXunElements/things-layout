@@ -104,8 +104,17 @@ Things.RoutingBehavior = {
    *  @param {String} Default routing name
    */
   addDefaultRouting: function(defaultRouting, loginRouting) {
-    page('/', this.scrollToTop, function() {
+
+    page('/'+defaultRouting, this.scrollToTop, function() {
       app.route = defaultRouting;
+    });
+
+    page('/', this.scrollToTop, function() {
+      if(defaultRouting!=='home')
+        page.redirect(defaultRouting)
+      else
+        app.route = defaultRouting;
+      
     });
 
     page('/login', this.scrollToTop, function() {
