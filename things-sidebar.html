@@ -165,7 +165,20 @@
           type: String,
           value: 'STANDARD'
         },
-        
+        /**
+         * homeRouting
+         */
+        homeRouting :{
+          type: String,
+          value: 'home'
+        },
+        /**
+         * login routing
+         */
+        loginRouting :{
+          type: String,
+          value: 'login'
+        },
         /**
          * 동적으로 메뉴 화면을 iron-pages내 content로 추가하기 위한 id 정보 
          */
@@ -258,7 +271,7 @@
        * Life Cycle
        */
       attached: function() {
-        this.addDefaultRouting('home', 'login');
+        this.addDefaultRouting(this.homeRouting, this.loginRouting);
       },
       
       /**
@@ -283,7 +296,7 @@
           });
 
           // ******** Routing 초기화 ***********
-          this.init(screens, 'home', 'login');
+          this.init(screens, this.homeRouting, this.loginRouting);
           // *********************************
           this.menuGroup = groups;
           this.screens = screens;
