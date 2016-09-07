@@ -43,6 +43,8 @@ Things.RoutingBehavior = {
           if(!screen.isRegistered) {
             if(screen.routing_type == 'DIY' || screen.routing_type == 'RESOURCE') {
               me._registerResourceScreen(screen);
+            } else if (screen.routing_type == 'VIEWER') {
+              me._registerViewerScreen(screen);
             } else {
               me._registerStaticScreen(screen);
             }
@@ -76,6 +78,21 @@ Things.RoutingBehavior = {
     Polymer.dom(content).appendChild(screen);
     Polymer.dom.flush();
   },
+
+  /**
+   * VIEWER 타입의 Dynamic Viewer를 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerViewerScreen: function(menuData) {
+    var content = document.querySelector('#' + this.pageContentId);
+    var screenName = 'things-scene-content';
+    var screen = document.createElement(screenName);
+    screen.menuInfo = menuData;
+    screen.dataRoute = menuData.routing;
+    Polymer.dom(content).appendChild(screen);
+    Polymer.dom.flush();
+  },  
 
   /**
    * STATIC 타입의 Screen을 등록한다.
