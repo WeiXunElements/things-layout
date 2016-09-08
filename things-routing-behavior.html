@@ -13,7 +13,7 @@ window.Things = window.Things || {};
  */
 Things.RoutingBehavior = {
 
-  properties:{
+  properties: {
     /**
      * 현재 선택된 메뉴 정보 
      */
@@ -36,17 +36,20 @@ Things.RoutingBehavior = {
     screens.forEach(function(screen) {
       var route = screen.routing;
       if (route) {
-        page('/' + screen.routing, me.scrollToTop, function() {
+        page('/' + screen.routing, me.scrollToTop, function(ctx) {
           app.route = screen.routing;
 
           // Dynamic Menu라면 Element가 등록되었는지 확인한 후 등록이 안 되었다면 등록한다.
           if(!screen.isRegistered) {
             if(screen.routing_type == 'DIY' || screen.routing_type == 'RESOURCE') {
               me._registerResourceScreen(screen);
+
             } else if (screen.routing_type == 'VIEWER') {
               me._registerViewerScreen(screen);
+
             } else if (screen.routing_type == 'VIEWER-CONTENT') {
               me._registerViewerContentScreen(screen);
+
             } else {
               me._registerStaticScreen(screen);
             }
@@ -54,7 +57,7 @@ Things.RoutingBehavior = {
             screen.isRegistered = true;
           }
 
-          var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category };
+          var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category, initialParams : ctx.state };
           me.selectedMenu = eventDetail;
           var event = new CustomEvent('things-routing-changed', { 'detail': eventDetail });
           document.dispatchEvent(event);
@@ -64,6 +67,7 @@ Things.RoutingBehavior = {
 
     this.addLastRouting();
   },
+
 
   /**
    * RESOURCE 타입의 Dynamic Screen을 등록한다.
@@ -96,6 +100,11 @@ Things.RoutingBehavior = {
     Polymer.dom.flush();
   },
 
+  /**
+   * VIEWER 타입과 비슷하지만 검색 폼이 없는 Dynamic Viewer를 등록한다.
+   * 
+   * @param {Object} menuData
+   */
   _registerViewerContentScreen: function(menuData) {
     var content = document.querySelector('#' + this.pageContentId);
     var screenName = 'things-scene-content-only';
@@ -133,17 +142,16 @@ Things.RoutingBehavior = {
    *  @param {String} Default routing name
    */
   addDefaultRouting: function(defaultRouting, loginRouting) {
-
-    page('/'+defaultRouting, this.scrollToTop, function() {
+    page('/' + defaultRouting, this.scrollToTop, function() {
       app.route = defaultRouting;
     });
 
     page('/', this.scrollToTop, function() {
-      if(defaultRouting!=='home')
+      if(defaultRouting !== 'home') {
         page.redirect(defaultRouting)
-      else
+      } else {
         app.route = defaultRouting;
-      
+      }
     });
 
     page('/login', this.scrollToTop, function() {
@@ -162,9 +170,7 @@ Things.RoutingBehavior = {
       page.redirect('/');
     });
     
-    page({
-      hashbang: true
-    });
+    page({ hashbang: true });
   }
 };
 
