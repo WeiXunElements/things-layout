@@ -57,10 +57,18 @@ Things.RoutingBehavior = {
             screen.isRegistered = true;
           }
 
+          // 1. 메뉴 타이틀 변경 
+          me.menuTitle = screen.title;
           var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category, initialParams : ctx.state };
+          // TODO selectedMenu 확인 후 사용하는 곳 없으면 삭제 
           me.selectedMenu = eventDetail;
-          var event = new CustomEvent('things-routing-changed', { 'detail': eventDetail });
-          document.dispatchEvent(event);
+
+          // 2. 라우팅 변경 이벤트 ...
+          var routeChangeEvent = new CustomEvent('things-routing-changed-' + screen.routing, { detail : eventDetail });
+          // 3. Recent Page 추가 이벤트 ...
+          var recentPageAddEvent = new CustomEvent('things-recent-page-added', { 'detail': eventDetail });
+          document.dispatchEvent(routeChangeEvent);
+          document.dispatchEvent(recentPageAddEvent);
         });
       }
     });
@@ -165,8 +173,8 @@ Things.RoutingBehavior = {
   addLastRouting: function() {
     page('*', function(attempted) {
       var url = window.location.href + attempted.path.substr(1);
-      // app.$.toastConfirm.text = `Can't find: ${url}. Redirected you to Home Page`;
-      // app.$.toastConfirm.show();
+      var msg = `Can't find: ${url}. Redirected to Home Page`;
+      var event = new CustomEvent('things-show-toast', { 'detail': { msg : msg } });
       page.redirect('/');
     });
     
