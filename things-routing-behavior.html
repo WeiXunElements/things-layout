@@ -47,8 +47,8 @@ Things.RoutingBehavior = {
             } else if (screen.routing_type == 'VIEWER') {
               me._registerViewerScreen(screen);
 
-            } else if (screen.routing_type == 'VIEWER-CONTENT') {
-              me._registerViewerContentScreen(screen);
+            } else if (screen.routing_type == 'VIEWER-SECTION') {
+              me._registerViewerSectionScreen(screen);
 
             } else {
               me._registerStaticScreen(screen);
@@ -109,14 +109,15 @@ Things.RoutingBehavior = {
   },
 
   /**
-   * VIEWER 타입과 비슷하지만 검색 폼이 없는 Dynamic Viewer를 등록한다.
+   * 검색 폼이 없는 (Section) Dynamic Viewer를 등록한다.
    * 
    * @param {Object} menuData
    */
-  _registerViewerContentScreen: function(menuData) {
+  _registerViewerSectionScreen: function(menuData) {
     var content = document.querySelector('#' + this.pageContentId);
-    var screenName = 'things-scene-content-only';
+    var screenName = 'things-scene-section';
     var screen = document.createElement(screenName);
+    screen.setAttribute('resource-url', menuData.resource_url);
     screen.menuInfo = menuData;
     screen.dataRoute = menuData.routing;
     Polymer.dom(content).appendChild(screen);
