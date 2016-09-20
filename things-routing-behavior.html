@@ -41,14 +41,31 @@ Things.RoutingBehavior = {
 
           // Dynamic Menu라면 Element가 등록되었는지 확인한 후 등록이 안 되었다면 등록한다.
           if(!screen.isRegistered) {
-            if(screen.routing_type == 'DIY' || screen.routing_type == 'RESOURCE') {
+            var routingType = screen.routing_type;
+
+            if(routingType == 'RESOURCE') {
               me._registerResourceScreen(screen);
 
+            } else if(routingType == 'RESOURCE-VIEW') {
+              me._registerResourceViewScreen(screen);
+
+            } else if(screen.routing_type == 'DIY-GRID') {
+              me._registerDiyGridScreen(screen);
+
+            } else if(screen.routing_type == 'DIY-FORM') {
+              me._registerDiyFormScreen(screen);
+
+            } else if(screen.routing_type == 'REPORT') {
+              me._registerReportScreen(screen);
+
             } else if (screen.routing_type == 'VIEWER') {
-              me._registerViewerScreen(screen);
+              me._registerSceneViewerScreen(screen);
 
             } else if (screen.routing_type == 'VIEWER-SECTION') {
-              me._registerViewerSectionScreen(screen);
+              me._registerSceneViewerSectionScreen(screen);
+
+            } else if (screen.routing_type == 'PLAIN-GRID') {
+              me._registerPlainGridScreen(screen);
 
             } else {
               me._registerStaticScreen(screen);
@@ -76,66 +93,111 @@ Things.RoutingBehavior = {
     this.addLastRouting();
   },
 
+  /**
+   * RESOURCE 타입 (검색 폼 - 그리드 화면 구성에 그리드 Row 클릭시 Detail Popup 화면 표시) 의 Dynamic Screen을 등록한다.
+   * 
+   * @param {Object} screen
+   * @param {Object} menuData
+   */
+  _setCommonScreenInfo: function(screen, menuData) {
+    screen.menuInfo = menuData;
+    screen.dataRoute = menuData.routing;
+    var content = document.querySelector('#' + this.pageContentId);
+    Polymer.dom(content).appendChild(screen);
+    Polymer.dom.flush();
+  },
 
   /**
-   * RESOURCE 타입의 Dynamic Screen을 등록한다.
+   * RESOURCE 타입 (검색 폼 - 그리드 화면 구성에 그리드 Row 클릭시 Detail Popup 화면 표시) 의 Dynamic Screen을 등록한다.
    * 
    * @param {Object} menuData
    */
   _registerResourceScreen: function(menuData) {
-    var content = document.querySelector('#' + this.pageContentId);
-    var screenName = (menuData.category == 'TERMINAL') ? 'things-menu-detail-view' : 
-                     (menuData.resource_type == 'DIY_GRID' ? 'things-report-content' : 'things-resource-menu-content');
+    //var screenName = (menuData.category == 'TERMINAL') ? 'things-menu-detail-view' : (menuData.resource_type == 'DIY_GRID' ? 'things-report-content' : 'things-resource-menu-content');
+    var screenName = (menuData.category == 'TERMINAL') ? 'things-menu-detail-view' : 'things-resource-menu-content';
     var screen = document.createElement(screenName);
-    screen.menuInfo = menuData;
-    screen.dataRoute = menuData.routing;
-    Polymer.dom(content).appendChild(screen);
-    Polymer.dom.flush();
+    this._setCommonScreenInfo(screen, menuData);
   },
 
   /**
-   * VIEWER 타입의 Dynamic Viewer를 등록한다.
+   * RESOURCE-VIEW 타입 (검색 폼 - 그리드 - 디테일 폼 화면 구성) 의 Dynamic Screen을 등록한다.
    * 
    * @param {Object} menuData
    */
-  _registerViewerScreen: function(menuData) {
-    var content = document.querySelector('#' + this.pageContentId);
-    var screenName = 'things-scene-content';
-    var screen = document.createElement(screenName);
-    screen.menuInfo = menuData;
-    screen.dataRoute = menuData.routing;
-    Polymer.dom(content).appendChild(screen);
-    Polymer.dom.flush();
+  _registerResourceViewScreen: function(menuData) {
+    var screen = document.createElement('things-standard-menu-content');
+    this._setCommonScreenInfo(screen, menuData);
   },
 
   /**
-   * 검색 폼이 없는 (Section) Dynamic Viewer를 등록한다.
+   * DIY-GRID 타입 (검색 폼 - DIY Grid 기반의 화면 구성) 의 Dynamic Screen을 등록한다.
    * 
    * @param {Object} menuData
    */
-  _registerViewerSectionScreen: function(menuData) {
-    var content = document.querySelector('#' + this.pageContentId);
-    var screenName = 'things-scene-section';
-    var screen = document.createElement(screenName);
+  _registerDiyGridScreen: function(menuData) {
+    var screen = document.createElement('things-diy-grid-content');
+    this._setCommonScreenInfo(screen, menuData);
+  },
+
+  /**
+   * DIY-FORM 타입 (검색 폼 - DIY Form 기반의 화면 구성) 의 Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerDiyFormScreen: function(menuData) {
+    var screen = document.createElement('things-diy-form-content');
+    this._setCommonScreenInfo(screen, menuData);
+  },
+
+  /**
+   * Report 타입 (조회 중심의 그리드 기반의 화면 구성) 의 Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerReportScreen: function(menuData) {
+    var screen = document.createElement('things-report-content');
+    this._setCommonScreenInfo(screen, menuData);
+  }, 
+
+  /**
+   * SCENE VIEWER 타입(검색 폼 - Scene Viewer)의 Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerSceneViewerScreen: function(menuData) {
+    var screen = document.createElement('things-scene-content');
+    this._setCommonScreenInfo(screen, menuData);
+  },
+
+  /**
+   * SCENE VIEWER과 동일하지만 검색 폼이 없는 화면 구성의 Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerSceneViewerSectionScreen: function(menuData) {
+    var screen = document.createElement('things-scene-section');
     screen.setAttribute('resource-url', menuData.resource_url);
-    screen.menuInfo = menuData;
-    screen.dataRoute = menuData.routing;
-    Polymer.dom(content).appendChild(screen);
-    Polymer.dom.flush();    
+    this._setCommonScreenInfo(screen, menuData);
   },
 
   /**
-   * STATIC 타입의 Screen을 등록한다.
+   * PLAIN GRID (검색 폼 - 그리드) 타입의 Screen을 등록한다.
+   * 
+   * @param {Object} menuData
+   */
+  _registerPlainGridScreen: function(menuData) {
+    var screen = document.createElement('things-menu-grid-section');
+    this._setCommonScreenInfo(screen, menuData);
+  },
+
+  /**
+   * STATIC 타입(개발자가 임의의 화면 구성)의 Screen을 등록한다.
    * 
    * @param {Object} menuData
    */
   _registerStaticScreen: function(menuData) {
-    var content = document.querySelector('#' + this.pageContentId);
     var screen = document.createElement(menuData.template);
-    screen.menuInfo = menuData;
-    screen.dataRoute = menuData.routing;
-    Polymer.dom(content).appendChild(screen);
-    Polymer.dom.flush();
+    this._setCommonScreenInfo(screen, menuData);
   },
 
   /**
