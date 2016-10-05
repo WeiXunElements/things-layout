@@ -107,13 +107,11 @@
       id="refresh"
       resource-url="[[resourceUrl]]"
       resource-action="[[resourceAction]]"
-      method="GET"
       query-fields="[[queryFields]]"
-      content-type="application/json"
       last-response="{{menus}}">
     </things-ajax>
 
-    <div class="brand"><things-i18n-msg msgid="title.[[title]]" auto></things-i18n-msg></div>
+    <div class="brand">[[title]]</div>
 
     <!-- Drawer Scroll Header Panel -->
     <paper-scroll-header-panel id="panel">
@@ -194,7 +192,8 @@
          * Brand title that will be show on top of menu
          */
         title: {
-          type: String
+          type: String,
+          value: 'Things'
         },
 
         /**
@@ -267,6 +266,7 @@
       },
 
       observers: [
+        '_userChanged(globals.user)',
         '_onChangeMenus(menus)'
       ],
       
@@ -280,6 +280,15 @@
        */
       attached: function() {
         this.addDefaultRouting(this.homeRouting, this.loginRouting);
+      },
+
+      /**
+       * 로그인 한 User 정보 변경시 
+       */
+      _userChanged: function(user) {
+        if(user && user.domain && user.domain.brand_name) {
+          this.title = user.domain.brand_name;
+        }
       },
       
       /**

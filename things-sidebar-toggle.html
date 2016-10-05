@@ -5,21 +5,24 @@
 <link rel="import" href="../things-global-behavior/things-global-behavior.html">
 <link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
 
+<!--
+  Toggle Sidebar
+-->
+
 <dom-module id="things-sidebar-toggle">
   <template>
-  <style>
-    :host {
-      display: block;
-    }
-    paper-button{
-      background:url(/images/icon-brand.png) no-repeat transparent;
-      @apply(--things-brand-btn);
-    }
-  </style>
+    <style>
+      :host {
+        display: block;
+      }
+      paper-button {
+        /*background:url(/images/icon-brand.png) no-repeat transparent;*/
+        @apply(--things-brand-btn);
+      }
+    </style>
 
     <!-- menu toggle -->
-    <paper-button id="sidebar-toggler">
-    </paper-button>
+    <paper-button id="sidebar-toggler" style$="background:url({{imageUrl}}) no-repeat transparent;"></paper-button>
 
     <paper-tooltip for="sidebar-toggler">
       <things-i18n-msg msgid="button.toggle_sidebar" auto>Toggle Sidebar</things-i18n-msg>
@@ -40,11 +43,32 @@
          */
         drawerId: {
           type: String
+        },
+
+        /**
+         * brand image
+         */
+        imageUrl: {
+          type: String,
+          value: '/images/icon-brand.png'
         }
       },
 
+      observers: [
+        'globalsChanged(globals.baseUrl, globals.user)'
+      ],
+
       listeners: {
         'sidebar-toggler.tap': 'toggleSidebar'
+      },
+
+      /**
+       * Global 변수가 변경되었을 경우 
+       */
+      globalsChanged: function(baseUrl, user) {
+        if(user && user.domain && user.domain.brand_image) {
+          this.imageUrl = baseUrl + '/download/' + user.domain.brand_image;
+        }
       },
 
       /**
@@ -61,7 +85,6 @@
           drawer.togglePanel();
         }
       }
-
     });
   </script>
 </dom-module>
