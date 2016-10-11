@@ -110,6 +110,19 @@
       query-fields="[[queryFields]]"
       last-response="{{menus}}">
     </things-ajax>
+    
+    <iron-a11y-keys
+      id="keys"
+      keys="ctrl+e"
+      target="[[keyBindTarget]]"
+      on-keys-pressed="excutePlay">
+    </iron-a11y-keys>
+    <iron-a11y-keys
+      id="keys"
+      keys="ctrl+s"
+      target="[[keyBindTarget]]"
+      on-keys-pressed="stopPlay">
+    </iron-a11y-keys>
 
     <div class="brand">[[title]]</div>
 
@@ -262,6 +275,13 @@
 
         _selectedMenu: {
           type: Object
+        },
+
+        keyBindTarget: {
+          type: Object,
+          value: function() {
+            return document.body;
+          }
         }
       },
 
