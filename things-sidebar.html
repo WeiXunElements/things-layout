@@ -197,14 +197,6 @@
           type: String,
           value: 'Things'
         },
-
-        /**
-         * Menu Title 
-         */
-        menuTitle: {
-          type: String,
-          notify: true
-        },
         
         /**
          * url that where the menu data get from
@@ -266,7 +258,8 @@
          * 현재 선택된 메뉴 
          */
         currentMenu: {
-          type: Object
+          type: Object,
+          notify: true
         }
       },
 
@@ -381,7 +374,10 @@
        * @param {Object} e 버튼 클릭 이벤트
        */
       toggle: function(e) {
-        this.$$('#' + e.target.ariaControls).toggle();
+        var target = this.$$('#' + e.target.ariaControls);
+        if(target && target.toggle) {
+          target.toggle();
+        }
       }
     });
   </script>

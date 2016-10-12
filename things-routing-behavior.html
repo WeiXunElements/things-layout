@@ -15,17 +15,11 @@ Things.RoutingBehavior = {
 
   properties: {
     /**
-     * 현재 선택된 메뉴 정보 
-     */
-    /*selectedMenu: {
-      type: Object
-    },*/
-
-    /**
      * 현재 선택된 메뉴의 상세 정보 
      */
     currentScreen: {
-      type: Object
+      type: Object,
+      notify: true
     },
 
     /**
@@ -76,6 +70,7 @@ Things.RoutingBehavior = {
       if (route) {
         page('/' + screen.routing, me.scrollToTop, function(ctx) {
           app.route = screen.routing;
+
           // Dynamic Menu라면 Element가 등록되었는지 확인한 후 등록이 안 되었다면 등록한다.
           if(!screen.isRegistered) {
             var routingType = screen.routing_type;
@@ -116,11 +111,9 @@ Things.RoutingBehavior = {
           var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category, initialParams : ctx.state };
           me.currentScreen = screen;
 
-          // TODO selectedMenu 확인 후 사용하는 곳 없으면 삭제 
-          // me.selectedMenu = eventDetail;
-
           // 2. 라우팅 변경 이벤트 ...
           var routeChangeEvent = new CustomEvent('things-routing-changed-' + screen.routing, { detail : eventDetail });
+
           // 3. Recent Page 추가 이벤트 ...
           var recentPageAddEvent = new CustomEvent('things-recent-page-added', { 'detail': eventDetail });
           document.dispatchEvent(routeChangeEvent);
@@ -153,7 +146,6 @@ Things.RoutingBehavior = {
    * @param {Object} menuData
    */
   _registerResourceScreen: function(menuData) {
-    //var screenName = (menuData.category == 'TERMINAL') ? 'things-menu-detail-view' : (menuData.resource_type == 'DIY_GRID' ? 'things-report-content' : 'things-resource-menu-content');
     var screenName = (menuData.category == 'TERMINAL') ? 'things-menu-detail-view' : 'things-resource-menu-content';
     var screen = document.createElement(screenName);
     this._setCommonScreenInfo(screen, menuData);
