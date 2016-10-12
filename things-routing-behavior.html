@@ -17,20 +17,46 @@ Things.RoutingBehavior = {
     /**
      * 현재 선택된 메뉴 정보 
      */
-    selectedMenu: {
+    /*selectedMenu: {
+      type: Object
+    },*/
+
+    /**
+     * 현재 선택된 메뉴의 상세 정보 
+     */
+    currentScreen: {
       type: Object
     },
-    scenes:{
+
+    /**
+     * Play할 페이지 리스트 
+     */
+    pagesToPlay: {
       type: Array,
       value:[]
     },
-    interval:{
+
+    /**
+     * Playing interval
+     */
+    playInterval: {
       type: Number,
-      value:1000
+      value: 1000
     },
-    _playingCount:{
+
+    /**
+     * Playing index
+     */
+    _playingIndex: {
       type: Number,
       value: 0
+    },
+
+    /**
+     * Async player
+     */
+    _asyncPlayer: {
+      type: Object
     }
   },
 
@@ -87,16 +113,11 @@ Things.RoutingBehavior = {
 
           // 1. 메뉴 타이틀 변경 
           me.menuTitle = screen.title;
-          var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category, initialParams : ctx.state};
-          if(screen.detail_form_id){
-            eventDetail.scenes = screen.detail_form_id.split(",")
-            eventDetail.scenes.push(screen.routing);
-          }
-
-          // me.interval = screen.menuParams.interval;
+          var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category, initialParams : ctx.state };
+          me.currentScreen = screen;
 
           // TODO selectedMenu 확인 후 사용하는 곳 없으면 삭제 
-          me.selectedMenu = eventDetail;
+          // me.selectedMenu = eventDetail;
 
           // 2. 라우팅 변경 이벤트 ...
           var routeChangeEvent = new CustomEvent('things-routing-changed-' + screen.routing, { detail : eventDetail });
@@ -263,30 +284,53 @@ Things.RoutingBehavior = {
     page({ hashbang: true });
   },
 
-  excutePlay: function(){
-    
-    if(!this.playing) this.scenes = this.selectedMenu.scenes;
-    if(!this.scenes||this.scenes.length<=1)return;
-
-    this.playing= true;
-
-    this._playAsync = this.async(this.excutePlay,this.interval);
-    if(this._playingCount+1 < this.scenes.length){
-      page('/'+this.scenes[this._playingCount])
-      this._playingCount++
-    }else{
-      page('/'+this.scenes[this._playingCount])
-      this._playingCount =0
+  /**
+   * Toggle play pages
+   */
+  togglePlayPages: function(event) {
+    var status = event.detail;
+    if(status == 'on') {
+      this.parsePagesToPlay();
+      this.startPlayPages();
+    } else {
+      this.stopPlayPages();
     }
   },
 
-  stopPlay: function(){
-    if(!this._playAsync) return;
+  /**
+   * 메뉴의 상세 정보에서 Play할 route 리스트를 파싱 
+   */
+  parsePagesToPlay: function() {
+    if(this.currentScreen.detail_form_id && this.currentScreen.detail_form_id.length > 1) {
+      this.pagesToPlay = this.currentScreen.detail_form_id.split(',');
+      this.pagesToPlay.unshift(this.currentScreen.routing);      
+    } else {
+      this.pagesToPlay = [];
+    }
+  },
 
-    this.cancelAsync(this._playAsync);
-    this._playAsync = null;
-    this.playing=false;
-    this._playingCount =0
+  /**
+   * Start play pages
+   */
+  startPlayPages: function() {
+    var playingCount = this.pagesToPlay ? this.pagesToPlay.length : 0;
+    if(playingCount <= 1) return;
+
+    this._asyncPlayer = this.async(this.startPlayPages, this.playInterval);
+    page('/' + this.pagesToPlay[this._playingIndex]);
+    this._playingIndex++;
+    if(this._playingIndex >= playingCount) this._playingIndex = 0;
+  },
+
+  /**
+   * Stop play pages
+   */
+  stopPlayPages: function() {
+    if(!this._asyncPlayer) return;
+    this.cancelAsync(this._asyncPlayer);
+    this._asyncPlayer = null;
+    this._playingIndex = 0;
+    page('/' + this.pagesToPlay[0]);
   }
 };
 
