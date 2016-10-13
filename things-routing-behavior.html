@@ -57,7 +57,7 @@ Things.RoutingBehavior = {
   /**
    * Initialize routings
    *
-   * @param {Array} Menu screen array
+   * @param {Array} Menu screen informations
    * @param {String} Defualt routing name
    * @param {String} Login routing name  
    */
@@ -106,17 +106,16 @@ Things.RoutingBehavior = {
             screen.isRegistered = true;
           }
 
-          // 1. 메뉴 타이틀 변경 
-          me.menuTitle = screen.title;
-          var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category, initialParams : ctx.state };
+          // 1. currentScreen 변경 
           me.currentScreen = screen;
+          var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category, initialParams : ctx.state };          
 
           // 2. 라우팅 변경 이벤트 ...
           var routeChangeEvent = new CustomEvent('things-routing-changed-' + screen.routing, { detail : eventDetail });
+          document.dispatchEvent(routeChangeEvent);
 
           // 3. Recent Page 추가 이벤트 ...
-          var recentPageAddEvent = new CustomEvent('things-recent-page-added', { 'detail': eventDetail });
-          document.dispatchEvent(routeChangeEvent);
+          var recentPageAddEvent = new CustomEvent('things-recent-page-added', { detail: eventDetail });
           document.dispatchEvent(recentPageAddEvent);
         });
       }
@@ -134,7 +133,7 @@ Things.RoutingBehavior = {
   _setCommonScreenInfo: function(screen, menuData) {
     screen.menuInfo = menuData;
     screen.dataRoute = menuData.routing;
-    screen.id= menuData.routing;
+    screen.id = menuData.routing;
     var content = document.querySelector('#' + this.pageContentId);
     Polymer.dom(content).appendChild(screen);
     Polymer.dom.flush();
@@ -251,7 +250,7 @@ Things.RoutingBehavior = {
 
     page('/', this.scrollToTop, function() {
       if(defaultRouting !== 'home') {
-        page.redirect(defaultRouting)
+        page.redirect(defaultRouting);
       } else {
         app.route = defaultRouting;
       }
@@ -269,7 +268,7 @@ Things.RoutingBehavior = {
     page('*', function(attempted) {
       var url = window.location.href + attempted.path.substr(1);
       var msg = `Can't find: ${url}. Redirected to Home Page`;
-      var event = new CustomEvent('things-show-toast', { 'detail': { msg : msg } });
+      var event = new CustomEvent('things-show-toast', { detail: { msg: msg } });
       page.redirect('/');
     });
     
