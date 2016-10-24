@@ -32,7 +32,9 @@
     "things-profile": "ThingsElements/things-profile",
     "things-resource-combo": "ThingsElements/things-resource-combo",
     "things-setting": "ThingsElements/things-setting",
-    "things-ajax": "ThingsElements/things-ajax"
+    "things-ajax": "ThingsElements/things-ajax",
+    "jsonfn": "https://github.com/vkiryukhin/jsonfn.git",
+    "page": "visionmedia/page.js#~1.6.4"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
