@@ -267,8 +267,7 @@
          * 현재 페이지의 routing
          */
         currentScreen: {
-          type: Object,
-          observer: 'currentScreenChanged'
+          type: Object
         },
       },
 
@@ -287,18 +286,6 @@
        */
       attached: function() {
         this.addDefaultRouting(this.homeRouting, this.loginRouting);
-      },
-
-      /**
-       * 현재 화면의 라우팅 정보가 입력되면 
-       * 이벤트 리스너를 등록한다.
-       */
-      currentScreenChanged: function(screen) {
-        var routing = screen.routing;
-        var playPages = this.togglePlayPages;
-
-        document.removeEventListener('things-toggle-play-pages_' + routing, playPages);
-        document.addEventListener('things-toggle-play-pages_' + routing, playPages);
       },
 
       /**
