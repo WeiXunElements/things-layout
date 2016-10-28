@@ -197,6 +197,7 @@ Things.RoutingBehavior = {
    */
   _registerSceneViewerScreen: function(menuData) {
     var screen = document.createElement('things-scene-content');
+    document.addEventListener('things-toggle-play-pages_' + menuData.routing, this.togglePlayPages);
     this._setCommonScreenInfo(screen, menuData);
   },
 
