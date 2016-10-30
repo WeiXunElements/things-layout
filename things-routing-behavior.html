@@ -81,12 +81,6 @@ Things.RoutingBehavior = {
             } else if(routingType == 'RESOURCE-VIEW') {
               me._registerResourceViewScreen(screen);
 
-            } else if(screen.routing_type == 'DIY-GRID') {
-              me._registerDiyGridScreen(screen);
-
-            } else if(screen.routing_type == 'DIY-FORM') {
-              me._registerDiyFormScreen(screen);
-
             } else if(screen.routing_type == 'REPORT') {
               me._registerReportScreen(screen);
 
@@ -95,9 +89,6 @@ Things.RoutingBehavior = {
 
             } else if (screen.routing_type == 'VIEWER-SECTION') {
               me._registerSceneViewerSectionScreen(screen);
-
-            } else if (screen.routing_type == 'PLAIN-GRID') {
-              me._registerPlainGridScreen(screen);
 
             } else {
               me._registerStaticScreen(screen);
@@ -161,26 +152,6 @@ Things.RoutingBehavior = {
   },
 
   /**
-   * DIY-GRID 타입 (검색 폼 - DIY Grid 기반의 화면 구성) 의 Dynamic Screen을 등록한다.
-   * 
-   * @param {Object} menuData
-   */
-  _registerDiyGridScreen: function(menuData) {
-    var screen = document.createElement('things-diy-grid-content');
-    this._setCommonScreenInfo(screen, menuData);
-  },
-
-  /**
-   * DIY-FORM 타입 (검색 폼 - DIY Form 기반의 화면 구성) 의 Screen을 등록한다.
-   * 
-   * @param {Object} menuData
-   */
-  _registerDiyFormScreen: function(menuData) {
-    var screen = document.createElement('things-diy-form-content');
-    this._setCommonScreenInfo(screen, menuData);
-  },
-
-  /**
    * Report 타입 (조회 중심의 그리드 기반의 화면 구성) 의 Screen을 등록한다.
    * 
    * @param {Object} menuData
@@ -209,16 +180,6 @@ Things.RoutingBehavior = {
   _registerSceneViewerSectionScreen: function(menuData) {
     var screen = document.createElement('things-scene-section');
     screen.setAttribute('resource-url', menuData.resource_url);
-    this._setCommonScreenInfo(screen, menuData);
-  },
-
-  /**
-   * PLAIN GRID (검색 폼 - 그리드) 타입의 Screen을 등록한다.
-   * 
-   * @param {Object} menuData
-   */
-  _registerPlainGridScreen: function(menuData) {
-    var screen = document.createElement('things-menu-grid-section');
     this._setCommonScreenInfo(screen, menuData);
   },
 
