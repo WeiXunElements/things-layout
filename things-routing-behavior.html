@@ -20,37 +20,6 @@ Things.RoutingBehavior = {
     currentScreen: {
       type: Object,
       notify: true
-    },
-
-    /**
-     * Play할 페이지 리스트 
-     */
-    pagesToPlay: {
-      type: Array,
-      value:[]
-    },
-
-    /**
-     * Playing interval
-     */
-    playInterval: {
-      type: Number,
-      value: 10000
-    },
-
-    /**
-     * Playing index
-     */
-    _playingIndex: {
-      type: Number,
-      value: 0
-    },
-
-    /**
-     * Async player
-     */
-    _asyncPlayer: {
-      type: Object
     }
   },
 
@@ -87,8 +56,8 @@ Things.RoutingBehavior = {
             } else if (screen.routing_type == 'VIEWER') {
               me._registerSceneViewerScreen(screen);
 
-            } else if (screen.routing_type == 'VIEWER-SECTION') {
-              me._registerSceneViewerSectionScreen(screen);
+            } else if (screen.routing_type == 'PLAYER') {
+              me._registerScenePlayerScreen(screen);
 
             } else {
               me._registerStaticScreen(screen);
@@ -168,18 +137,18 @@ Things.RoutingBehavior = {
    */
   _registerSceneViewerScreen: function(menuData) {
     var screen = document.createElement('things-scene-content');
-    document.addEventListener('things-toggle-play-pages_' + menuData.routing, this.togglePlayPages);
     this._setCommonScreenInfo(screen, menuData);
   },
 
   /**
-   * SCENE VIEWER과 동일하지만 검색 폼이 없는 화면 구성의 Screen을 등록한다.
+   * SCENE PLAYER 타입의 화면을 등록한다 menuData의 detail_form_id를 통해
+   * Scene Player에 포함될 Scene들을 전달한다.
    * 
    * @param {Object} menuData
    */
-  _registerSceneViewerSectionScreen: function(menuData) {
-    var screen = document.createElement('things-scene-section');
-    screen.setAttribute('resource-url', menuData.resource_url);
+  _registerScenePlayerScreen: function(menuData) {
+    var screen = document.createElement('things-scene-player');
+    screen.setAttribute('play-pages', menuData.detail_form_id);
     this._setCommonScreenInfo(screen, menuData);
   },
 
@@ -235,55 +204,6 @@ Things.RoutingBehavior = {
     });
     
     page({ hashbang: true });
-  },
-
-  /**
-   * Toggle play pages
-   */
-  togglePlayPages: function(event) {
-    var status = event.detail;
-    if(status == 'on') {
-      this.parsePagesToPlay();
-      this.startPlayPages();
-    } else {
-      this.stopPlayPages();
-    }
-  },
-
-  /**
-   * 메뉴의 상세 정보에서 Play할 route 리스트를 파싱 
-   */
-  parsePagesToPlay: function() {
-    if(this.currentScreen.detail_form_id && this.currentScreen.detail_form_id.length > 1) {
-      this.pagesToPlay = this.currentScreen.detail_form_id.split(',');
-      this.pagesToPlay.unshift(this.currentScreen.routing);      
-    } else {
-      this.pagesToPlay = [];
-    }
-  },
-
-  /**
-   * Start play pages
-   */
-  startPlayPages: function() {
-    var playingCount = this.pagesToPlay ? this.pagesToPlay.length : 0;
-    if(playingCount <= 1) return;
-
-    this._asyncPlayer = this.async(this.startPlayPages, this.playInterval);
-    page('/' + this.pagesToPlay[this._playingIndex]);
-    this._playingIndex++;
-    if(this._playingIndex >= playingCount) this._playingIndex = 0;
-  },
-
-  /**
-   * Stop play pages
-   */
-  stopPlayPages: function() {
-    if(!this._asyncPlayer) return;
-    this.cancelAsync(this._asyncPlayer);
-    this._asyncPlayer = null;
-    this._playingIndex = 0;
-    page('/' + this.pagesToPlay[0]);
   }
 };
 
