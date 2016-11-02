@@ -191,7 +191,7 @@ Things.RoutingBehavior = {
         if(defaultRouting !== 'home') {
           page.redirect(defaultRouting);
         } else {
-          app.route = defaultRouting;
+          app.route = '/';
         }
       });
     }
@@ -211,6 +211,7 @@ Things.RoutingBehavior = {
       var url = window.location.href + attempted.path.substr(1);
       var msg = `Can't find: ${url}. Redirected to Home Page`;
       var event = new CustomEvent('things-show-toast', { detail: { msg: msg } });
+      document.dispatchEvent(event);
       page.redirect('/');
     });
     
