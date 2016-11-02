@@ -30,9 +30,12 @@ Things.RoutingBehavior = {
    * @param {String} Defualt routing name
    * @param {String} Login routing name  
    */
-  init: function(screens, defaultRouting, loginRouting) {
+  init: function(defaultRouting, screens) {
     var me = this;
-    this.addDefaultRouting(defaultRouting, loginRouting);
+    var defaultRoutingScreen = screens.filter(function(object){
+      return ('/'+object.routing) == defaultRouting
+    });
+    defaultRoutingScreen.length>0?this.addDefaultRouting(defaultRouting,screens):this.addDefaultRouting('/', screens);
 
     screens.forEach(function(screen) {
       var route = screen.routing;
@@ -174,19 +177,27 @@ Things.RoutingBehavior = {
    *  add default routing
    *  @param {String} Default routing name
    */
-  addDefaultRouting: function(defaultRouting, loginRouting) {
+  addDefaultRouting: function(defaultRouting, screens) {
     page('/' + defaultRouting, this.scrollToTop, function() {
       app.route = defaultRouting;
     });
 
-    page('/', this.scrollToTop, function() {
-      if(defaultRouting !== 'home') {
-        page.redirect(defaultRouting);
-      } else {
-        app.route = defaultRouting;
-      }
-    });
+    var defaultRoutingExists = screens.filter(function(object){
+      return ('/'+object.routing) == defaultRouting
+    }).length>0;
 
+    if(defaultRoutingExists){
+      page('/', this.scrollToTop, function() {
+        if(defaultRouting !== 'home') {
+          page.redirect(defaultRouting);
+        } else {
+          app.route = defaultRouting;
+        }
+      });
+    }
+  },
+
+  addLoginRouting: function(loginRouting){
     page('/login', this.scrollToTop, function() {
       app.route = loginRouting;
     });
