@@ -285,7 +285,9 @@
        * Life Cycle
        */
       attached: function() {
-        this.addDefaultRouting(this.homeRouting, this.loginRouting);
+          // ******** Routing 초기화 ***********
+          this.addLoginRouting(this.loginRouting);
+          // *********************************
       },
 
       /**
@@ -319,7 +321,7 @@
           });
 
           // ******** Routing 초기화 ***********
-          this.init(screens, this.homeRouting, this.loginRouting);
+          this.init(this.homeRouting,screens);
           // *********************************
           this.menuGroup = groups;
           this.screens = screens;
