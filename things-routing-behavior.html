@@ -201,6 +201,10 @@ Things.RoutingBehavior = {
     page('/login', this.scrollToTop, function() {
       app.route = loginRouting;
     });
+    
+    page('/', this.scrollToTop, function() {
+        app.route = '/';
+    });
   },
 
   /**
