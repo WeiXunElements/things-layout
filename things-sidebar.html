@@ -13,6 +13,7 @@
 <link rel="import" href="./things-routing-behavior.html">
 <script src="../page/page.js"></script>
 <script src="../jsonfn/jsonfn.js"></script>
+
 <!--
 해당 Element는 
   1.things-routing-behavior.html를 사용하여 Routing 등록 및 설정을 수행한다.
@@ -114,7 +115,7 @@
       last-response="{{menus}}">
     </things-ajax>
     
-    <div class="brand">[[title]]</div>
+    <div class="brand">[[brandName]]</div>
 
     <!-- Drawer Scroll Header Panel -->
     <paper-scroll-header-panel id="panel">
@@ -194,7 +195,7 @@
         /**
          * Brand title that will be show on top of menu
          */
-        title: {
+        brandName: {
           type: String,
           value: 'Things'
         },
@@ -272,7 +273,6 @@
       },
 
       observers: [
-        '_userChanged(globals.user)',
         '_onChangeMenus(menus)'
       ],
       
@@ -288,15 +288,6 @@
           // ******** Routing 초기화 ***********
           this.addLoginRouting(this.loginRouting);
           // *********************************
-      },
-
-      /**
-       * 로그인 한 User 정보 변경시 
-       */
-      _userChanged: function(user) {
-        if(user && user.domain && user.domain.brand_name) {
-          this.title = user.domain.brand_name;
-        }
       },
       
       /**

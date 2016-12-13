@@ -6,7 +6,7 @@
 <link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
 
 <!--
-  Toggle Sidebar
+  Toggle Sidebar Toggle
 -->
 
 <dom-module id="things-sidebar-toggle">
@@ -46,29 +46,34 @@
         },
 
         /**
+         * brand image id
+         */
+        brandImageId: {
+          type: String
+        },
+
+        /**
          * brand image
          */
         imageUrl: {
           type: String,
-          value: '/images/icon-brand.png'
+          value: '/images/icon-brand.png',
+          computed: '_computeImageUrl(brandImageId)'
         }
       },
-
-      observers: [
-        'globalsChanged(globals.baseUrl, globals.user)'
-      ],
 
       listeners: {
         'sidebar-toggler.tap': 'toggleSidebar'
       },
 
       /**
-       * Global 변수가 변경되었을 경우 
+       * brandImageId가 변경되었을 경우 
+       *
+       * @param {String} brandImageId
        */
-      globalsChanged: function(baseUrl, user) {
-        if(user && user.domain && user.domain.brand_image) {
-          this.imageUrl = baseUrl + '/download/' + user.domain.brand_image;
-        }
+      _computeImageUrl: function(brandImageId) {
+        var baseUrl = this.get('globals.baseUrl');
+        return baseUrl + '/download/' + brandImageId;
       },
 
       /**

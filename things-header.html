@@ -18,7 +18,7 @@
 
   <div>
     <!-- menu toggle -->
-    <things-sidebar-toggle drawer-id="[[drawerId]]"></things-sidebar-toggle>
+    <things-sidebar-toggle drawer-id="[[drawerId]]" brand-image-id="[[brandImageId]]"></things-sidebar-toggle>
   </div>
 
   </template>
@@ -32,6 +32,13 @@
          * drawer id
          */
         drawerId: {
+          type: String
+        },
+
+        /**
+         * brand image id
+         */
+        brandImageId: {
           type: String
         }
       }      
