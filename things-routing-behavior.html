@@ -188,14 +188,12 @@ Things.RoutingBehavior = {
 
     if(defaultRoutingExists){
       page('/', this.scrollToTop, function() {
-        if(defaultRouting !== '/') {
+        if(defaultRouting !== 'home') {
           page.redirect(defaultRouting);
         } else {
           app.route = '/';
         }
       });
-    }else{
-      app.route = '/';
     }
   },
 
@@ -222,8 +220,10 @@ Things.RoutingBehavior = {
       document.dispatchEvent(event);
       page.redirect('/');
     });
-
     page({ hashbang: true });
+    if(app.dataRoute!==window.location.hash.replace('#!/','')){
+      page('/'+window.location.hash.replace('#!/',''))
+    }
   }
 };
 
