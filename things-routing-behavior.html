@@ -188,12 +188,14 @@ Things.RoutingBehavior = {
 
     if(defaultRoutingExists){
       page('/', this.scrollToTop, function() {
-        if(defaultRouting !== 'home') {
+        if(defaultRouting !== '/') {
           page.redirect(defaultRouting);
         } else {
           app.route = '/';
         }
       });
+    }else{
+      app.route = '/';
     }
   },
 
