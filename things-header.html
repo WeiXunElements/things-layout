@@ -4,6 +4,8 @@
 
 <!--
   헤더 엘리먼트
+
+@demo demo/demo-things-header.html
 -->
 
 <dom-module id="things-header">
@@ -13,7 +15,7 @@
       display: block;
       background-color:var(--paper-blue-grey-800);
       color:#fff;
-    }    
+    }
   </style>
 
   <div>
@@ -29,19 +31,23 @@
 
       properties: {
         /**
-         * drawer id
+         * drawer 아이디
+         * ***********
+         * @type {String}
          */
         drawerId: {
           type: String
         },
 
         /**
-         * brand image id
+         * brand image 아이디
+         * *****
+         * @type {String}
          */
         brandImageId: {
           type: String
         }
-      }      
+      }
     });
   </script>
 </dom-module>

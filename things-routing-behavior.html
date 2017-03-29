@@ -6,8 +6,7 @@
 window.Things = window.Things || {};
 
 /**
- * This behavior is for routing registration when menu or other element need to use routing registration.
- * On standard we used this behavior on things-sidebar.html
+ * ## things-sidebar.html 에 사용될 RoutingBehavior이다.
  *
  * @polymerBehavior Things.RoutingBehavior
  */
@@ -16,6 +15,8 @@ Things.RoutingBehavior = {
   properties: {
     /**
      * 현재 선택된 메뉴의 상세 정보
+     * *******
+     * @type {Object}
      */
     currentScreen: {
       type: Object,
@@ -24,11 +25,12 @@ Things.RoutingBehavior = {
   },
 
   /**
-   * Initialize routings
+   * routings초기화
+   * *********
+   * @param {Array} Menu #### :screen informations
+   * @param {String} Defualt #### :routing name
+   * @param {String} Login #### :routing name
    *
-   * @param {Array} Menu screen informations
-   * @param {String} Defualt routing name
-   * @param {String} Login routing name
    */
   init: function(defaultRouting, screens) {
     var me = this;
@@ -92,6 +94,7 @@ Things.RoutingBehavior = {
    *
    * @param {Object} screen
    * @param {Object} menuData
+   * **********
    */
   _setCommonScreenInfo: function(screen, menuData) {
     screen.menuInfo = menuData;
@@ -106,6 +109,7 @@ Things.RoutingBehavior = {
    * RESOURCE 타입 (검색 폼 - 그리드 화면 구성에 그리드 Row 클릭시 Detail Popup 화면 표시) 의 Dynamic Screen을 등록한다.
    *
    * @param {Object} menuData
+   * ******
    */
   _registerResourceScreen: function(menuData) {
     var screenName = (menuData.category == 'TERMINAL') ? 'things-menu-detail-view' : 'things-resource-menu-content';
@@ -117,6 +121,7 @@ Things.RoutingBehavior = {
    * RESOURCE-VIEW 타입 (검색 폼 - 그리드 - 디테일 폼 화면 구성) 의 Dynamic Screen을 등록한다.
    *
    * @param {Object} menuData
+   * ********
    */
   _registerResourceViewScreen: function(menuData) {
     var screen = document.createElement('things-standard-menu-content');
@@ -127,6 +132,7 @@ Things.RoutingBehavior = {
    * Report 타입 (조회 중심의 그리드 기반의 화면 구성) 의 Screen을 등록한다.
    *
    * @param {Object} menuData
+   * ********
    */
   _registerReportScreen: function(menuData) {
     var screen = document.createElement('things-report-content');
@@ -137,6 +143,7 @@ Things.RoutingBehavior = {
    * SCENE VIEWER 타입(검색 폼 - Scene Viewer)의 Screen을 등록한다.
    *
    * @param {Object} menuData
+   * ******
    */
   _registerSceneViewerScreen: function(menuData) {
     var screen = document.createElement('things-scene-content');
@@ -148,6 +155,7 @@ Things.RoutingBehavior = {
    * Scene Player에 포함될 Scene들을 전달한다.
    *
    * @param {Object} menuData
+   * *******
    */
   _registerScenePlayerScreen: function(menuData) {
     var screen = document.createElement('things-scene-player');
@@ -159,6 +167,7 @@ Things.RoutingBehavior = {
    * STATIC 타입(개발자가 임의의 화면 구성)의 Screen을 등록한다.
    *
    * @param {Object} menuData
+   * ********
    */
   _registerStaticScreen: function(menuData) {
     var screen = document.createElement(menuData.template);
@@ -167,6 +176,7 @@ Things.RoutingBehavior = {
 
   /**
    * move screen scroll to top
+   * ********
    */
   scrollToTop: function(ctx, next) {
     //app.scrollPageToTop();
@@ -174,8 +184,9 @@ Things.RoutingBehavior = {
   },
 
   /**
-   *  add default routing
+   *  default routing 추가
    *  @param {String} Default routing name
+   *  **********
    */
   addDefaultRouting: function(defaultRouting, screens) {
     page('/' + defaultRouting, this.scrollToTop, function() {
@@ -196,7 +207,12 @@ Things.RoutingBehavior = {
       });
     }
   },
-
+  /**
+   * LoginRouting 추가
+   * *********
+   * @param {loginRouting} LoginRouting
+   *
+   */
   addLoginRouting: function(loginRouting){
     page('/login', this.scrollToTop, function() {
       app.route = loginRouting;
@@ -211,6 +227,7 @@ Things.RoutingBehavior = {
 
   /**
    * add last routing, when page not foud redirect to home
+   * *********
    */
   addLastRouting: function() {
     page('*', function(attempted) {

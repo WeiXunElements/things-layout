@@ -15,14 +15,19 @@
 <script src="../jsonfn/jsonfn.js"></script>
 
 <!--
-해당 Element는 
+해당 Element는
+
   1.things-routing-behavior.html를 사용하여 Routing 등록 및 설정을 수행한다.
+
   2.action에서 제공하는 Url로 Menu를 검색하여 Routing 등록 및 화면 좌측에 메뉴로 제공한다.
+
   3.메뉴성이기에 Drawer Attribute가 꼭 필요하다.
+
   Example:
-    <things-sidebar drawer class="layout vertical" 
+
+     <things-sidebar drawer class="layout vertical"
       title="MENU" screens="{{screens}}" action="menus.json?mode=auth">
-    </things-sidebar>
+     </things-sidebar>
 -->
 
 <dom-module id="things-sidebar">
@@ -114,7 +119,7 @@
       query-fields="[[queryFields]]"
       last-response="{{menus}}">
     </things-ajax>
-    
+
     <div class="brand">[[brandName]]</div>
 
     <!-- Drawer Scroll Header Panel -->
@@ -143,7 +148,7 @@
         <template is="dom-if" if={{isTerminal}}>
           <template is="dom-repeat" items="{{group.child}}" as=item>
             <a href="[[item.routing]]" class="things-image-button">
-              <things-image-button  
+              <things-image-button
                   item="[[item]]"
                   title="[[item.title]]"
                   image-src="[[_computeIconpath(item.icon_path)]]">
@@ -161,8 +166,10 @@
 
       properties: {
         /**
-         * 메뉴 카테고리 - UI / OI 구분을 위한 메뉴 데이터 조회 파라미터 
-         */        
+         * 메뉴 카테고리 - UI / OI 구분을 위한 메뉴 데이터 조회 파라미터
+         * *******
+         * @type {String}
+         */
         menuCategory: {
           type: String,
           value: 'STANDARD'
@@ -170,65 +177,79 @@
 
         /**
          * homeRouting
+         * ******
+         * @type {String}
          */
         homeRouting :{
           type: String,
           value: 'home'
         },
-        
+
         /**
          * login routing
+         * *******
+         * @type {String}
          */
         loginRouting :{
           type: String,
           value: 'login'
         },
-        
+
         /**
-         * 동적으로 메뉴 화면을 iron-pages내 content로 추가하기 위한 id 정보 
+         * 동적으로 메뉴 화면을 iron-pages내 content로 추가하기 위한 id 정보
+         * *******
+         * @type {String}
          */
         pageContentId : {
           type: String,
           value: 'content'
         },
-        
+
         /**
          * Brand title that will be show on top of menu
+         * ********
+         * @type {String}
          */
         brandName: {
           type: String
         },
-        
+
         /**
          * url that where the menu data get from
+         * ********
+         * @type {String}
          */
         resourceUrl: {
           type: String,
           value: 'menus/user_menus/STANDARD',
           computed: '_computedMenuUrl(menuCategory)'
         },
-        
+
         /**
          * action that where the menu data get
+         * *******
+         * @type {String}
          */
         resourceAction: {
           type: String,
           value: 'index'
         },
-        
+
         /**
          * query condition for query menu data
+         * *******
+         * @type {Array}
          */
         queryFields : {
           type: Array,
           computed: '_computedQuery(menuCategory)'
         },
-        
+
         /**
          * menu group returns menu tree as Array
-         * [ { 
+         * [ {
          *    id: 1, name: 'System', title: 'System', menu_type: 'Menu', child: [ { child menus ...} ]
-         * }, { 
+         * }, {
          *    id: 2, name: 'Base', title: 'Base', menu_type: 'Menu', child: [ { child menus ...} ]
          * } ]
          */
@@ -238,16 +259,20 @@
         },
 
         /**
-         * 사용자 권한에 따른 메뉴 리스트 
+         * 사용자 권한에 따른 메뉴 리스트
+         * *******
+         * @type {Array}
          */
         menus: {
           type: Array,
           value: []
         },
-        
+
         /**
          * 메뉴 리스트 중에 App 안에 나타날 실제 화면 (menu_type이 'SCREEN') 정보.
          * 화면 정보들만 라우팅에 추가된다.
+         * ********
+         * @type {Array}
          */
         screens: {
           type: Array,
@@ -256,7 +281,9 @@
         },
 
         /**
-         * 현재 선택된 메뉴 
+         * 현재 선택된 메뉴
+         * ******
+         * @type {Object}
          */
         currentMenu: {
           type: Object,
@@ -265,6 +292,8 @@
 
         /**
          * 현재 페이지의 routing
+         * *****
+         * @type {Object}
          */
         currentScreen: {
           type: Object
@@ -274,27 +303,28 @@
       observers: [
         '_onChangeMenus(menus)'
       ],
-      
+
       behaviors: [
         Things.RoutingBehavior,
         Things.GlobalBehavior
       ],
-      
+
       /**
        * Life Cycle
+       * *******
        */
       attached: function() {
           // ******** Routing 초기화 ***********
           this.addLoginRouting(this.loginRouting);
           // *********************************
       },
-      
+
       /**
        * When last response data recieved this function will be called
        * then convert these data to menu tree and set to menuGroup
        * also convert to screen array and set to screens.
-       * 
-       * @param {Object} 메뉴 정보 menu.total : 총 메뉴 개수, menu.items : 메뉴 리스트 
+       ********
+       * @param {Object} 메뉴 정보 menu.total : 총 메뉴 개수, menu.items : 메뉴 리스트
        */
       _onChangeMenus: function(menus) {
         if(menus && menus.length > 0) {
@@ -320,7 +350,7 @@
 
       /**
        * Find child menu and return it
-       *
+       ********
        * @param  {Array} parent group id
        * @param  {Array} all menu list
        * @return {Array} child screen array
@@ -333,7 +363,7 @@
 
       /**
        * 메뉴 URL 생성
-       * 
+       *******
        * @param {String} menuCategory
        */
       _computedMenuUrl: function(menuCategory) {
@@ -342,7 +372,7 @@
 
       /**
        * 메뉴 검색 조건 생성
-       * 
+       *******
        * @param {String} menuCategory
        */
       _computedQuery: function(menuCategory) {
@@ -364,9 +394,10 @@
       _computeIconpath: function(icon){
         return this.globals.baseUrl + '/download/' + icon;
       },
-      
+
       /**
        * Toggle menu group box
+       * ******
        * @param {Object} e 버튼 클릭 이벤트
        */
       toggle: function(e) {
