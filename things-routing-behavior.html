@@ -70,6 +70,9 @@ Things.RoutingBehavior = {
             } else if(routingType == 'RESOURCE-VIEW') {
               me._registerResourceViewScreen(screen);
 
+            } else if(routingType == 'MASTER-DETAIL') {
+              me._registerMasterDetailScreen(screen);
+
             } else if(routingType == 'PLAIN') {
               me._registerPlainScreen(screen);
 
@@ -146,6 +149,16 @@ Things.RoutingBehavior = {
    */
   _registerResourceViewScreen: function(menuData) {
     var screen = document.createElement('things-standard-menu-content');
+    this._setCommonScreenInfo(screen, menuData);
+  },
+
+  /**
+   * MASTER-DETAIL 타입 (화면 유형 : 검색 폼 - 마스터 그리드 - 디테일 그리드)의 Dynamic Screen을 등록한다.
+   * ********
+   * @param {Object} menuData 현재 선택된 메뉴 정보
+   */
+  _registerMasterDetailScreen: function(menuData) {
+    var screen = document.createElement('things-master-detail-content');
     this._setCommonScreenInfo(screen, menuData);
   },
 
