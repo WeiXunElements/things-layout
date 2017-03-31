@@ -22,27 +22,42 @@ Things.RoutingBehavior = {
       type: Object,
       notify: true
     }
+
+    /**
+     * 최근 방문한 페이지가 추가되었음을 알리는 이벤트
+     *
+     * @event things-recent-page-added
+     */
+    /**
+     * 현재 라우팅이 변경되었음을 알리는 이벤트
+     * {routing}은 현재 라우팅 값으로 대체됨
+     *
+     * @event things-routing-changed-{routing}
+     */    
   },
 
   /**
-   * routings초기화
+   * routings 초기화
    * *********
-   * @param {Array} Menu #### :screen informations
-   * @param {String} Defualt #### :routing name
-   * @param {String} Login #### :routing name
+   * @param {String} defaultRouting ### :기본 라우팅 값 
+   * @param {Array} screens #### :현재 화면에서 조회된 모든 메뉴 정보
    *
    */
   init: function(defaultRouting, screens) {
     var me = this;
-    var defaultRoutingScreen = screens.filter(function(object){
-      return ('/'+object.routing) == defaultRouting
+
+    var defaultRoutingScreen = screens.filter(function(object) {
+      return ('/' + object.routing) == defaultRouting
     });
-    defaultRoutingScreen.length>0?this.addDefaultRouting(defaultRouting,screens):this.addDefaultRouting('/', screens);
+    
+    defaultRoutingScreen.length > 0 ? 
+      this.addDefaultRouting(defaultRouting,screens) : 
+      this.addDefaultRouting('/', screens);
 
     screens.forEach(function(screen) {
       var route = screen.routing;
       if (route) {
-        page('/' + screen.routing, me.scrollToTop, function(ctx) {
+        page('/' + route, me.scrollToTop, function(ctx) {
           app.route = screen.routing;
 
           // Dynamic Menu라면 Element가 등록되었는지 확인한 후 등록이 안 되었다면 등록한다.
@@ -54,6 +69,9 @@ Things.RoutingBehavior = {
 
             } else if(routingType == 'RESOURCE-VIEW') {
               me._registerResourceViewScreen(screen);
+
+            } else if(routingType == 'PLAIN') {
+              me._registerPlainScreen(screen);
 
             } else if(screen.routing_type == 'REPORT') {
               me._registerReportScreen(screen);
@@ -73,10 +91,16 @@ Things.RoutingBehavior = {
 
           // 1. currentScreen 변경
           me.currentScreen = screen;
-          var eventDetail = { pageName: screen.title, routeInfo: screen.routing, category: screen.category, initialParams : ctx.state };
+          var eventDetail = { 
+            pageName: screen.title, 
+            routeInfo: screen.routing, 
+            category: screen.category, 
+            initialParams : ctx.state 
+          };
 
           // 2. 라우팅 변경 이벤트 ...
-          var routeChangeEvent = new CustomEvent('things-routing-changed-' + screen.routing, { detail : eventDetail });
+          var routingChangedEventName = 'things-routing-changed-' + screen.routing;
+          var routeChangeEvent = new CustomEvent(routingChangedEventName, { detail : eventDetail });
           document.dispatchEvent(routeChangeEvent);
 
           // 3. Recent Page 추가 이벤트 ...
@@ -90,11 +114,10 @@ Things.RoutingBehavior = {
   },
 
   /**
-   * RESOURCE 타입 (검색 폼 - 그리드 화면 구성에 그리드 Row 클릭시 Detail Popup 화면 표시) 의 Dynamic Screen을 등록한다.
-   *
-   * @param {Object} screen
-   * @param {Object} menuData
+   * 메뉴 정보를 이용하여 화면을 화면 레이아웃의 Content 영역에 등록한다.
    * **********
+   * @param {Object} screen 화면 오브젝트
+   * @param {Object} menuData 현재 선택된 메뉴 정보
    */
   _setCommonScreenInfo: function(screen, menuData) {
     screen.menuInfo = menuData;
@@ -106,10 +129,9 @@ Things.RoutingBehavior = {
   },
 
   /**
-   * RESOURCE 타입 (검색 폼 - 그리드 화면 구성에 그리드 Row 클릭시 Detail Popup 화면 표시) 의 Dynamic Screen을 등록한다.
-   *
-   * @param {Object} menuData
+   * RESOURCE 타입 (화면 유형 : 검색 폼 - 그리드 화면 구성에 그리드 Row 클릭시 Detail Popup 화면)의 Dynamic Screen을 등록한다.
    * ******
+   * @param {Object} menuData 현재 선택된 메뉴 정보
    */
   _registerResourceScreen: function(menuData) {
     var screenName = (menuData.category == 'TERMINAL') ? 'things-menu-detail-view' : 'things-resource-menu-content';
@@ -118,10 +140,9 @@ Things.RoutingBehavior = {
   },
 
   /**
-   * RESOURCE-VIEW 타입 (검색 폼 - 그리드 - 디테일 폼 화면 구성) 의 Dynamic Screen을 등록한다.
-   *
-   * @param {Object} menuData
+   * RESOURCE-VIEW 타입 (화면 유형 : 검색 폼 - 그리드 - 디테일 폼)의 Dynamic Screen을 등록한다.
    * ********
+   * @param {Object} menuData 현재 선택된 메뉴 정보
    */
   _registerResourceViewScreen: function(menuData) {
     var screen = document.createElement('things-standard-menu-content');
@@ -129,10 +150,22 @@ Things.RoutingBehavior = {
   },
 
   /**
-   * Report 타입 (조회 중심의 그리드 기반의 화면 구성) 의 Screen을 등록한다.
-   *
-   * @param {Object} menuData
+   * PLAIN 타입 (화면 유형 : 검색 폼 - 그리드 화면 구성)의 Plain Screen을 등록한다.
+   * 화면은 메뉴의 메타 정보로 그려내고 서비스 호출 URL도 화면의 메뉴 메타 정보로 사용한다.
+   * 단순하게 서비스 호출하여 조회된 데이터로 그리드를 그리는 화면 유형
    * ********
+   * @param {Object} menuData 현재 선택된 메뉴 정보
+   */
+  _registerPlainScreen: function(menuData) {
+    var screen = document.createElement('things-menu-grid-content');
+    this._setCommonScreenInfo(screen, menuData);
+  },  
+
+  /**
+   * Report 타입 (조회 중심의 그리드 기반의 화면 구성)의 Screen을 등록한다.
+   * 화면은 DiyGrid 기반으로 그려내고 서비스 호출 URL도 화면의 메뉴 메타 정보로 사용한다.
+   * ********
+   * @param {Object} menuData 현재 선택된 메뉴 정보
    */
   _registerReportScreen: function(menuData) {
     var screen = document.createElement('things-report-content');
@@ -141,9 +174,8 @@ Things.RoutingBehavior = {
 
   /**
    * SCENE VIEWER 타입(검색 폼 - Scene Viewer)의 Screen을 등록한다.
-   *
-   * @param {Object} menuData
    * ******
+   * @param {Object} menuData 현재 선택된 메뉴 정보
    */
   _registerSceneViewerScreen: function(menuData) {
     var screen = document.createElement('things-scene-content');
@@ -153,9 +185,8 @@ Things.RoutingBehavior = {
   /**
    * SCENE PLAYER 타입의 화면을 등록한다 menuData의 detail_form_id를 통해
    * Scene Player에 포함될 Scene들을 전달한다.
-   *
-   * @param {Object} menuData
    * *******
+   * @param {Object} menuData 현재 선택된 메뉴 정보
    */
   _registerScenePlayerScreen: function(menuData) {
     var screen = document.createElement('things-scene-player');
@@ -165,9 +196,8 @@ Things.RoutingBehavior = {
 
   /**
    * STATIC 타입(개발자가 임의의 화면 구성)의 Screen을 등록한다.
-   *
-   * @param {Object} menuData
    * ********
+   * @param {Object} menuData 현재 선택된 메뉴 정보
    */
   _registerStaticScreen: function(menuData) {
     var screen = document.createElement(menuData.template);
@@ -177,6 +207,8 @@ Things.RoutingBehavior = {
   /**
    * move screen scroll to top
    * ********
+   * @param {Object} ctx
+   * @param {Function} next
    */
   scrollToTop: function(ctx, next) {
     //app.scrollPageToTop();
@@ -184,20 +216,21 @@ Things.RoutingBehavior = {
   },
 
   /**
-   *  default routing 추가
-   *  @param {String} Default routing name
-   *  **********
+   * Default Routing 추가 
+   * *********
+   * @param {String} defaultRouting 기본 라우팅 
+   * @param {Array} screens 화면에서 조회한 모든 메뉴 정보 리스트 
    */
   addDefaultRouting: function(defaultRouting, screens) {
     page('/' + defaultRouting, this.scrollToTop, function() {
       app.route = defaultRouting;
     });
 
-    var defaultRoutingExists = screens.filter(function(object){
-      return ('/'+object.routing) == defaultRouting
-    }).length>0;
+    var defaultRoutingExists = screens.filter(function(object) {
+      return ('/' + object.routing) == defaultRouting
+    }).length > 0;
 
-    if(defaultRoutingExists){
+    if(defaultRoutingExists) {
       page('/', this.scrollToTop, function() {
         if(defaultRouting !== 'home') {
           page.redirect(defaultRouting);
@@ -207,13 +240,13 @@ Things.RoutingBehavior = {
       });
     }
   },
+
   /**
    * LoginRouting 추가
    * *********
-   * @param {loginRouting} LoginRouting
-   *
+   * @param {String} loginRouting LoginRouting
    */
-  addLoginRouting: function(loginRouting){
+  addLoginRouting: function(loginRouting) {
     page('/login', this.scrollToTop, function() {
       app.route = loginRouting;
     });
@@ -237,9 +270,11 @@ Things.RoutingBehavior = {
       document.dispatchEvent(event);
       page.redirect('/');
     });
+
     page({ hashbang: true });
-    if(app.dataRoute!==window.location.hash.replace('#!/','')){
-      page('/'+window.location.hash.replace('#!/',''))
+    
+    if(app.dataRoute !== window.location.hash.replace('#!/', '')) {
+      page('/' + window.location.hash.replace('#!/', ''))
     }
   }
 };

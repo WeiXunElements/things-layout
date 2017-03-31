@@ -6,7 +6,8 @@
 <link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
 
 <!--
-  Toggle Sidebar Toggle
+  Sidebar Toggle을 위한 화면 
+  브랜드 이미지가 표시되고 해당 이미지를 클릭하면 Toggle이 작동하여 Sidebar가 show/hide 동작을 한다. 
 -->
 
 <dom-module id="things-sidebar-toggle">
@@ -40,7 +41,7 @@
 
       properties: {
         /**
-         * drawer 아이다
+         * Drawer ID
          * ******
          * @type {String}
          */
@@ -49,7 +50,7 @@
         },
 
         /**
-         * brand image 아이디
+         * Brand 이미지를 나타내기 위한 첨부파일(이미지) 아이디
          * ******
          * @type {String}
          */
@@ -58,9 +59,9 @@
         },
 
         /**
-         * brand image
+         * Brand 이미지를 나타내기 위한 첨부파일(이미지) URL
          * *******
-         * @type {sTRING}
+         * @type {String}
          */
         imageUrl: {
           type: String,
@@ -74,7 +75,7 @@
       },
 
       /**
-       * brandImageId가 변경되었을 경우
+       * brandImageId가 변경된 이후 brand image를 조회하는 URL을 계산
        ********
        * @param {String} brandImageId
        */
@@ -86,6 +87,7 @@
       /**
        * Toggle Sidebar. 로그인 이후에만 toggle이 적용됨
        * **********
+       * @param {Object} e
        */
       toggleSidebar: function(e) {
         var drawer = app.$[this.drawerId];
