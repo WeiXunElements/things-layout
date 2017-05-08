@@ -359,7 +359,9 @@
       _getChildMenu: function(menuGroup, items) {
         return items.filter(function(item) {
           var screenMenuFlag = (item && item.menu_type === 'SCREEN' && item.parent_id === menuGroup.id);
-          if(screenMenuFlag) item.parent_name = menuGroup.name;
+          if(screenMenuFlag) {
+            item.full_title = menuGroup.title + ' / ' + item.title;
+          }
           return screenMenuFlag;
         });
       },
