@@ -360,7 +360,7 @@
         return items.filter(function(item) {
           var screenMenuFlag = (item && item.menu_type === 'SCREEN' && item.parent_id === menuGroup.id);
           if(screenMenuFlag) {
-            item.full_title = menuGroup.title + ' / ' + item.title;
+            item.parent_name = menuGroup.title;
           }
           return screenMenuFlag;
         });
