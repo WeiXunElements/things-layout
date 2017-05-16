@@ -89,12 +89,12 @@
         color:rgba(255,255,255,.8);
         line-height: 2.5 !important
       }
-      paper-item[focused]{
+      paper-item[active]{
         color:#fff;
         font-weight:bold;
         background-color:rgba(0,0,0,.1);
       }
-      paper-item[focused]:before{
+      paper-item[active]:before{
         background-color:var(--things-secondary-background-color);
         opacity:1;
       }
@@ -134,11 +134,11 @@
             <iron-icon icon="icons:folder"></iron-icon>[[group.title]]
           </paper-button>
 
-          <iron-collapse id="{{group.menuGroupId}}" tabindex="0">
+          <iron-collapse id="{{group.menuGroupId}}" opened="[[_computeGroupOpend(group,currentScreen)]]" tabindex="0">
             <paper-listbox selected-item="{{currentMenu}}" class="content">
               <template is="dom-repeat" items="{{group.child}}" as=item>
                 <a href="[[item.routing]]">
-                  <paper-item data$="{{item}}">[[item.title]]</paper-item>
+                  <paper-item data$="{{item}}" active="[[_computeMenuActive(item, currentScreen)]]">[[item.title]]</paper-item>
                 </a>
               </template>
             </paper-listbox>
@@ -319,7 +319,24 @@
           this.addLoginRouting(this.loginRouting);
           // *********************************
       },
-
+      /**
+       * group, currentMenu가 변화 될때 해당 메소드가 호출되며 그룹메뉴의 비교값을 리턴한다.
+       ********
+       * @param {Object} group 
+       * @param {Object} currentMenu 
+       */
+      _computeGroupOpend: function(group, currentMenu){
+        return group.id == currentMenu.parent_id;
+      },
+      /**
+       * menu, currentMenu가 변화 될때 해당 메소드가 호출되며 그룹메뉴의 비교값을 리턴한다.
+       ********
+       * @param {Object} menu 
+       * @param {Object} currentMenu 
+       */
+      _computeMenuActive: function(menu, currentMenu){
+        return menu.id == currentMenu.id
+      },
       /**
        * When last response data recieved this function will be called
        * then convert these data to menu tree and set to menuGroup
