@@ -34,6 +34,11 @@ Things.RoutingBehavior = {
      *
      * @event things-routing-changed-{routing}
      */    
+    /**
+     * 라우팅이 설저이 완료된 경우
+     *
+     * @event things-routing-configured
+     */    
   },
 
   /**
@@ -114,6 +119,8 @@ Things.RoutingBehavior = {
     });
 
     this.addLastRouting();
+    var routingConfigured = new CustomEvent('things-routing-configured', { detail: null });
+    document.dispatchEvent(routingConfigured);
   },
 
   /**
