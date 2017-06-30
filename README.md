@@ -1,11 +1,11 @@
 # things-layout
 
-## Sidebar Menu를 구성해주고 보여주고 수김는 컨포넌트들의 집합이다.
+## This is a collection of components that configure, show and hide sidebar menu.
 
 # things-sidebar
-### 1.things-routing-behavior.html를 사용하여 Routing 등록 및 설정을 수행한다.
-### 2.action에서 제공하는 Url로 Menu를 검색하여 Routing 등록 및 화면 좌측에 메뉴로 제공한다.
-### 3.메뉴성이기에 Drawer Attribute가 꼭 필요하다.
+### 1. Register and set up routing using things-routing-behavior.html.
+### 2. Search the Menu with the Url provided in the action, register the Routing, and provide the menu on the left side of the screen.
+### 3. Drawer Attribute is necessary since it is for menu.
 
 Example:
 
@@ -17,7 +17,7 @@ Example:
 
 # things-header, things-sidebar-toggle
 
-## Sidebar Menu를 보여주고 수김는 컨포넌트
+## Components that show and hide sidebar menu.
 
 Example: 
 ```html
@@ -33,8 +33,7 @@ Example:
 
 ## Dependencies
 
-Element dependencies are managed via [Bower](http://bower.io/). You can
-install that via:
+Element dependencies are managed via [Bower](http://bower.io/). You can install that via:
 
     npm install -g bower
 

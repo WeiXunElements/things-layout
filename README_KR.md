@@ -1,11 +1,11 @@
 # things-layout
 
-## Sidebar Menu를 구성해주고 보여주고 수김는 컨포넌트들의 집합이다.
+## 이는 사이드바 메뉴를 구성하고 보여주고 숨기는 컨포넌트들의 집합이다.
 
 # things-sidebar
-### 1.things-routing-behavior.html를 사용하여 Routing 등록 및 설정을 수행한다.
-### 2.action에서 제공하는 Url로 Menu를 검색하여 Routing 등록 및 화면 좌측에 메뉴로 제공한다.
-### 3.메뉴성이기에 Drawer Attribute가 꼭 필요하다.
+### 1. things-routing-behavior.html을 사용하여 Routing을 등록 및 설정한다.
+### 2. action에서 제공하는 Url로 Menu를 검색하여 Routing을 등록하고 화면 좌측에 메뉴를 제공한다.
+### 3. Menu용이기 때문에, Drawer Attribute가 꼭 필요하다.
 
 Example:
 
@@ -17,7 +17,7 @@ Example:
 
 # things-header, things-sidebar-toggle
 
-## Sidebar Menu를 보여주고 수김는 컨포넌트
+## 사이드바 메뉴를 보여주고 숨기는 컨포넌트
 
 Example: 
 ```html
@@ -33,26 +33,22 @@ Example:
 
 ## Dependencies
 
-Element dependencies are managed via [Bower](http://bower.io/). You can
-install that via:
+element의 종속성은 [Bower](http://bower.io/)를 통해 관리되며, 아래의 방법을 통해 설치할 수 있다.
 
     npm install -g bower
 
-Then, go ahead and download the element's dependencies:
+그리고, 아래의 방법을 통해 실행할 수 있다.
 
     bower install
 
 ## Playing With Your Element
 
-If you wish to work on your element in isolation, we recommend that you use
-[Polyserve](https://github.com/PolymerLabs/polyserve) to keep your element's
-bower dependencies in line. You can install it via:
+element를 독립적으로 처리하려면 [Polyserve](https://github.com/PolymerLabs/polyserve)를 사용하여 element의 bower 의존성을 유지하도록 하며, 이는 아래의 방법을 통해 설치할 수 있다.
 
     npm install -g polymer-cli
 
-And you can run it via:
+그리고, 아래의 방법을 통해 실행할 수 있다.
 
     polymer serve
 
-Once running, you can preview your element at
-`http://localhost:8080/components/things-layout/`, where `things-layout` is the name of the directory containing it.
+element를 실행한 경우, `things-layout`이 디렉토리 이름으로 포함되어 있는 `http://localhost:8080/components/things-layout/`을 통해 이를 미리 확인할 수 있다.
