@@ -141,7 +141,7 @@ Copyright © HatioLab Inc. All rights reserved.
           <iron-collapse id="{{group.menuGroupId}}" opened="[[_computeGroupOpend(group,currentScreen)]]" tabindex="0">
             <paper-listbox selected-item="{{currentMenu}}" class="content">
               <template is="dom-repeat" items="{{group.child}}" as=item>
-                <a href="[[item.routing]]">
+                <a href="[[item.routing]]" on-tap="handleItemTap">
                   <paper-item data$="{{item}}" active="[[_computeMenuActive(item, currentScreen)]]">[[item.title]]</paper-item>
                 </a>
               </template>
@@ -330,7 +330,11 @@ Copyright © HatioLab Inc. All rights reserved.
        * @param {Object} currentMenu 
        */
       _computeGroupOpend: function(group, currentMenu){
-        return group.id == currentMenu.parent_id;
+        if (this.isMobile) {
+          return true;
+        } else {
+          return group.id == currentMenu.parent_id;
+        }
       },
       /**
        * menu, currentMenu가 변화 될때 해당 메소드가 호출되며 그룹메뉴의 비교값을 리턴한다.
@@ -405,11 +409,14 @@ Copyright © HatioLab Inc. All rights reserved.
         if(menuCategory === 'STANDARD') {
           this.isStandard = true;
           this.isTerminal = false;
-
+          if (menuCategory === 'MOBILE') {
+            this.isMobile = true;
+          }
         } else if(menuCategory === 'TERMINAL') {
           this.isStandard = false;
           this.isTerminal = true;
-        };
+          this.isMobile = false;
+        }
 
         return '[{ name: "category", operator: "eq", value: ' + menuCategory + '}, { name: "hidden_flag", operator: "is_not_true" }]';
       },
@@ -432,6 +439,12 @@ Copyright © HatioLab Inc. All rights reserved.
         var target = this.$$('#' + e.target.ariaControls);
         if(target && target.toggle) {
           target.toggle();
+        }
+      },
+
+      handleItemTap: function(e) {
+        if (this.isMobile) {
+          this.fire('tapmenuitem');
         }
       }
     });
