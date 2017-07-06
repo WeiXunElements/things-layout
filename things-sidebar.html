@@ -406,16 +406,16 @@ Copyright © HatioLab Inc. All rights reserved.
        * @param {String} menuCategory
        */
       _computedQuery: function(menuCategory) {
-        if(menuCategory === 'STANDARD') {
+        if (menuCategory === 'MOBILE') {
           this.isStandard = true;
           this.isTerminal = false;
-          if (menuCategory === 'MOBILE') {
-            this.isMobile = true;
-          }
+          this.isMobile = true;
+        } else if(menuCategory === 'STANDARD') {
+          this.isStandard = true;
+          this.isTerminal = false;
         } else if(menuCategory === 'TERMINAL') {
           this.isStandard = false;
           this.isTerminal = true;
-          this.isMobile = false;
         }
 
         return '[{ name: "category", operator: "eq", value: ' + menuCategory + '}, { name: "hidden_flag", operator: "is_not_true" }]';
@@ -444,7 +444,7 @@ Copyright © HatioLab Inc. All rights reserved.
 
       handleItemTap: function(e) {
         if (this.isMobile) {
-          this.fire('tapmenuitem');
+          this.fire('tap-menu-item');
         }
       }
     });
