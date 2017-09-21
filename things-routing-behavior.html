@@ -153,6 +153,11 @@ Things.RoutingBehavior = {
   },
 
   _registerRoutingEvent: function(routing, eventDetail) {
+    if(Things.DataGlobal.user && Things.DataGlobal.user.account_status == 'password_change') {
+      var logoutElement = document.querySelector('things-logout');
+      logoutElement.logout();
+    }    
+
     // 2. 라우팅 변경 이벤트 ...
     var routingChangedEventName = 'things-routing-changed-' + routing;
     var routeChangeEvent = new CustomEvent(routingChangedEventName, { detail : eventDetail });
@@ -340,12 +345,22 @@ Things.RoutingBehavior = {
    * @param {String} loginRouting LoginRouting
    */
   addLoginRouting: function(loginRouting) {
+    var me = this;
+
     page('/login', this.scrollToTop, function() {
+      if(Things.DataGlobal.user && Things.DataGlobal.user.account_status == 'password_change') {
+        var logoutElement = document.querySelector('things-logout');
+        logoutElement.logout();
+      }
       app.route = loginRouting;
     });
 
     page('/', this.scrollToTop, function() {
-        app.route = '/';
+      if(Things.DataGlobal.user && Things.DataGlobal.user.account_status == 'password_change') {
+        var logoutElement = document.querySelector('things-logout');
+        logoutElement.logout();
+      }      
+      app.route = '/';
     });
 
     page({ hashbang: true });
