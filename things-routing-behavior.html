@@ -115,6 +115,7 @@ Things.RoutingBehavior = {
           // 1. currentScreen 변경
           me.currentScreen = menuData;
           var eventDetail = {
+            id: menuData.id,
             pageName: menuData.title,
             routeInfo: menuData.routing,
             category: menuData.category,
@@ -133,6 +134,7 @@ Things.RoutingBehavior = {
             // 1. currentScreen 변경
             me.currentScreen = menuData;
             var eventDetail = {
+              id: menuData.id,
               pageName: menuData.title,
               routeInfo: detailRoute,
               category: menuData.category,
