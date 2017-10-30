@@ -350,12 +350,11 @@ Copyright © HatioLab Inc. All rights reserved.
        * then convert these data to menu tree and set to menuGroup
        * also convert to screen array and set to screens.
        *
-       * menus 변경시 things-menus-changed 이벤트 호출
+       * screen 변경시 things-screens-changed 이벤트 호출
        ********
        * @param {Object} menus 메뉴 정보 menu.total : 총 메뉴 개수, menu.items : 메뉴 리스트
        */
       _onChangeMenus: function(menus) {
-        this.fire('things-menus-changed', menus);
         if(menus && menus.length > 0) {
           var groups = [], screens = [], me = this;
 
@@ -374,6 +373,7 @@ Copyright © HatioLab Inc. All rights reserved.
           // *********************************
           this.menuGroup = groups;
           this.screens = screens;
+          this.fire('things-screens-changed', this.screens);
         }
       },
 
