@@ -8,14 +8,13 @@ Copyright © HatioLab Inc. All rights reserved.
 <link rel="import" href="../paper-badge/paper-badge.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
-
 <link rel="import" href="../things-ajax/things-ajax.html">
 <link rel="import" href="../things-global-behavior/things-global-behavior.html">
 <link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
 <link rel="import" href="../things-image-button/things-image-button.html">
-
+<link rel="import" href="../things-input-field/things-input-field.html">
 <link rel="import" href="./things-routing-behavior.html">
-<script src="../page/page.js"></script>
+<script src="./page.js"></script>
 <script src="../jsonfn/jsonfn.js"></script>
 
 <!--
@@ -40,20 +39,23 @@ Copyright © HatioLab Inc. All rights reserved.
     <style>
       :host {
         display: block;
-        background-color:var(--things-sidebar-background-color);
-        color:#fff;
+        background-color: var(--things-sidebar-background-color);
+        color: #fff;
       }
+
       paper-scroll-header-panel {
         height: 100%;
         @apply(--things-sidebar-panel);
       }
+
       .brand {
-        background:#1D4667;
-        min-height:35px;
+        background: #1D4667;
+        min-height: 35px;
         padding: 10px 0 0 50px;
         text-transform: capitalize;
-        font-size:26px
+        font-size: 26px
       }
+
       paper-button {
         display: block;
         border-bottom: 1px solid rgba(0, 0, 0, .15);
@@ -63,65 +65,74 @@ Copyright © HatioLab Inc. All rights reserved.
         text-align: left;
         @apply(--border-radius-clear);
       }
-      iron-collapse:focus,a:focus{outline:none;}
+
+      iron-collapse:focus,
+      a:focus {
+        outline: none;
+      }
+
       paper-button iron-icon {
         @apply(--things-small-icon);
         margin-top: -2px;
         margin-right: 4px
       }
+
       paper-listbox {
         background-color: rgba(0, 0, 0, .3);
         border-bottom: 1px solid rgba(0, 0, 0, .05);
         border-left: 2px solid var(--things-secondary-background-color);
-        padding:0;
+        padding: 0;
       }
+
       paper-item:before {
-        content:"";
-        display:inline-block;
-        width:3px;height:3px;
-        position:relative;
-        top:-2px;
-        margin-right:4px;
-        background-color:rgba(255,255,255,.3);
+        content: "";
+        display: inline-block;
+        width: 3px;
+        height: 3px;
+        position: relative;
+        top: -2px;
+        margin-right: 4px;
+        background-color: rgba(255, 255, 255, .3);
       }
+
       paper-item {
         padding: 0 10px;
         display: block !important;
         min-height: 30px !important;
         border-bottom: 1px solid rgba(0, 0, 0, .1);
         font-size: 12px !important;
-        color:rgba(255,255,255,.8);
+        color: rgba(255, 255, 255, .8);
         line-height: 2.5 !important
       }
-      paper-item[active]{
-        color:#fff;
-        font-weight:bold;
-        background-color:rgba(0,0,0,.1);
+
+      paper-item[active] {
+        color: #fff;
+        font-weight: bold;
+        background-color: rgba(0, 0, 0, .1);
       }
-      paper-item[active]:before{
-        background-color:var(--things-secondary-background-color);
-        opacity:1;
+
+      paper-item[active]:before {
+        background-color: var(--things-secondary-background-color);
+        opacity: 1;
       }
+
       iron-image {
-        display:block !important;
+        display: block !important;
       }
+
       .things-image-button {
-        display:block;
-        text-align:center;
-        text-decoration:none;
-        font-size:15px;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        font-size: 15px;
       }
+
       a {
-        text-decoration:none;
+        text-decoration: none;
       }
     </style>
 
-    <things-ajax
-      auto
-      id="refresh"
-      resource-url="[[resourceUrl]]"
-      resource-action="[[resourceAction]]"
-      query-fields="[[queryFields]]"
+    <things-ajax auto id="refresh" resource-url="[[resourceUrl]]" resource-action="[[resourceAction]]" query-fields="[[queryFields]]"
       last-response="{{menus}}">
     </things-ajax>
 
@@ -129,8 +140,8 @@ Copyright © HatioLab Inc. All rights reserved.
 
     <!-- Drawer Scroll Header Panel -->
     <paper-scroll-header-panel id="panel">
+      <things-input-field label="메뉴 검색" id="inputMenuName" value="{{searchMenu::input}}" hidden=[[!searchEnable]]></things-input-field>
       <content></content>
-
       <template is="dom-repeat" items="{{menuGroup}}" as=group>
         <!-- Standard Menu -->
         <template is="dom-if" if={{isStandard}}>
@@ -140,7 +151,7 @@ Copyright © HatioLab Inc. All rights reserved.
 
           <iron-collapse id="{{group.menuGroupId}}" opened="[[_computeGroupOpend(group,currentScreen)]]" tabindex="0">
             <paper-listbox selected-item="{{currentMenu}}" class="content">
-              <template is="dom-repeat" items="{{group.child}}" as=item>
+              <template is="dom-repeat" items="{{group.child}}" as=item filter="{{menuSearch(searchMenu)}}">
                 <a href="[[item.routing]]" on-tap="handleItemTap">
                   <paper-item data$="{{item}}" active="[[_computeMenuActive(item, currentScreen)]]">[[item.title]]</paper-item>
                 </a>
@@ -153,10 +164,7 @@ Copyright © HatioLab Inc. All rights reserved.
         <template is="dom-if" if={{isTerminal}}>
           <template is="dom-repeat" items="{{group.child}}" as=item>
             <a href="[[item.routing]]" class="things-image-button">
-              <things-image-button
-                  item="[[item]]"
-                  title="[[item.title]]"
-                  image-src="[[_computeIconpath(item.icon_path)]]">
+              <things-image-button item="[[item]]" title="[[item.title]]" image-src="[[_computeIconpath(item.icon_path)]]">
               </things-image-button>
             </a>
           </template>
@@ -185,7 +193,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * ******
          * @type {String}
          */
-        homeRouting :{
+        homeRouting: {
           type: String,
           value: 'home'
         },
@@ -195,7 +203,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * *******
          * @type {String}
          */
-        loginRouting :{
+        loginRouting: {
           type: String,
           value: 'login'
         },
@@ -205,7 +213,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * *******
          * @type {String}
          */
-        pageContentId : {
+        pageContentId: {
           type: String,
           value: 'content'
         },
@@ -245,7 +253,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * *******
          * @type {Array}
          */
-        queryFields : {
+        queryFields: {
           type: Array,
           computed: '_computedQuery(menuCategory)'
         },
@@ -303,6 +311,16 @@ Copyright © HatioLab Inc. All rights reserved.
         currentScreen: {
           type: Object
         },
+        /**
+         * 메뉴검색바 생성여부
+         * *****
+         * @type {Boolean}
+         * @default false
+         */
+        searchEnable: {
+          type: Boolean,
+          value: false
+        }
       },
 
       observers: [
@@ -318,10 +336,10 @@ Copyright © HatioLab Inc. All rights reserved.
        * Life Cycle
        * *******
        */
-      attached: function() {
-          // ******** Routing 초기화 ***********
-          this.addLoginRouting(this.loginRouting);
-          // *********************************
+      attached: function () {
+        // ******** Routing 초기화 ***********
+        this.addLoginRouting(this.loginRouting);
+        // *********************************
       },
       /**
        * group, currentMenu가 변화 될때 해당 메소드가 호출되며 그룹메뉴의 비교값을 리턴한다.
@@ -329,7 +347,7 @@ Copyright © HatioLab Inc. All rights reserved.
        * @param {Object} group 
        * @param {Object} currentMenu 
        */
-      _computeGroupOpend: function(group, currentMenu){
+      _computeGroupOpend: function (group, currentMenu) {
         if (this.isMobile) {
           return true;
         } else {
@@ -342,7 +360,7 @@ Copyright © HatioLab Inc. All rights reserved.
        * @param {Object} menu 
        * @param {Object} currentMenu 
        */
-      _computeMenuActive: function(menu, currentMenu){
+      _computeMenuActive: function (menu, currentMenu) {
         return menu.id == currentMenu.id
       },
       /**
@@ -354,24 +372,26 @@ Copyright © HatioLab Inc. All rights reserved.
        ********
        * @param {Object} menus 메뉴 정보 menu.total : 총 메뉴 개수, menu.items : 메뉴 리스트
        */
-      _onChangeMenus: function(menus) {
-        if(menus && menus.length > 0) {
-          var groups = [], screens = [], me = this;
+      _onChangeMenus: function (menus) {
+        if (menus && menus.length > 0) {
+          var groups = [],
+            screens = [],
+            me = this;
 
-          menus.forEach(function(item) {
+          menus.forEach(function (item) {
             if (item.menu_type === 'MENU') {
               item.child = me._getChildMenu(item, menus);
               item.menuGroupId = 'group' + item.id;
               groups.push(item);
-            } else if(item.menu_type === 'SCREEN') {
+            } else if (item.menu_type === 'SCREEN') {
               screens.push(item);
-            } else if(item.menu_type === 'HIDDEN'){
+            } else if (item.menu_type === 'HIDDEN') {
               screens.push(item);
             }
           });
 
           // ******** Routing 초기화 ***********
-          this.init(this.homeRouting,screens);
+          this.init(this.homeRouting, screens);
           // *********************************
           this.menuGroup = groups;
           this.screens = screens;
@@ -386,10 +406,10 @@ Copyright © HatioLab Inc. All rights reserved.
        * @param  {Array} items all menu list
        * @return {Array} child screen array
        */
-      _getChildMenu: function(menuGroup, items) {
-        return items.filter(function(item) {
+      _getChildMenu: function (menuGroup, items) {
+        return items.filter(function (item) {
           var screenMenuFlag = (item && item.menu_type === 'SCREEN' && item.parent_id === menuGroup.id);
-          if(screenMenuFlag) {
+          if (screenMenuFlag) {
             item.parent_name = menuGroup.title;
           }
           return screenMenuFlag;
@@ -401,7 +421,7 @@ Copyright © HatioLab Inc. All rights reserved.
        *******
        * @param {String} menuCategory
        */
-      _computedMenuUrl: function(menuCategory) {
+      _computedMenuUrl: function (menuCategory) {
         return 'menus/user_menus/' + menuCategory;
       },
 
@@ -410,20 +430,21 @@ Copyright © HatioLab Inc. All rights reserved.
        *******
        * @param {String} menuCategory
        */
-      _computedQuery: function(menuCategory) {
+      _computedQuery: function (menuCategory) {
         if (menuCategory === 'MOBILE') {
           this.isStandard = true;
           this.isTerminal = false;
           this.isMobile = true;
-        } else if(menuCategory === 'STANDARD') {
+        } else if (menuCategory === 'STANDARD') {
           this.isStandard = true;
           this.isTerminal = false;
-        } else if(menuCategory === 'TERMINAL') {
+        } else if (menuCategory === 'TERMINAL') {
           this.isStandard = false;
           this.isTerminal = true;
         }
 
-        return '[{ name: "category", operator: "eq", value: ' + menuCategory + '}, { name: "hidden_flag", operator: "is_not_true" }]';
+        return '[{ name: "category", operator: "eq", value: ' + menuCategory +
+          '}, { name: "hidden_flag", operator: "is_not_true" }]';
       },
 
       /**
@@ -431,7 +452,7 @@ Copyright © HatioLab Inc. All rights reserved.
        *******
        * @param {String} icon 메뉴 아이콘 조회 URL 구성을 위한 첨부파일(이미지) ID
        */
-      _computeIconpath: function(icon) {
+      _computeIconpath: function (icon) {
         return this.globals.baseUrl + '/download/' + icon;
       },
 
@@ -440,16 +461,32 @@ Copyright © HatioLab Inc. All rights reserved.
        * ******
        * @param {Object} e 버튼 클릭 이벤트
        */
-      toggle: function(e) {
+      toggle: function (e) {
         var target = this.$$('#' + e.target.ariaControls);
-        if(target && target.toggle) {
+        if (target && target.toggle) {
           target.toggle();
         }
       },
-
-      handleItemTap: function(e) {
+      handleItemTap: function (e) {
         if (this.isMobile) {
           this.fire('tap-menu-item');
+        }
+      },
+
+      /**
+       * 메뉴검색기능
+       * ******
+       * @param {string} text 검색하는 키워드
+       * @return {Array} 키워드가 포함된 메뉴이름들
+       */
+      menuSearch: function (searchText) {
+        if (!searchText) {
+          return null;
+        } else {
+          return function (item) {
+            var titleName = item.title;
+            return titleName.indexOf(searchText) != -1;
+          }
         }
       }
     });
