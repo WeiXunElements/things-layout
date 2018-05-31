@@ -372,26 +372,24 @@ Copyright © HatioLab Inc. All rights reserved.
        ********
        * @param {Object} menus 메뉴 정보 menu.total : 총 메뉴 개수, menu.items : 메뉴 리스트
        */
-      _onChangeMenus: function (menus) {
-        if (menus && menus.length > 0) {
-          var groups = [],
-            screens = [],
-            me = this;
+      _onChangeMenus: function(menus) {
+        if(menus && menus.length > 0) {
+          var groups = [], screens = [], me = this;
 
-          menus.forEach(function (item) {
+          menus.forEach(function(item) {
             if (item.menu_type === 'MENU') {
               item.child = me._getChildMenu(item, menus);
               item.menuGroupId = 'group' + item.id;
               groups.push(item);
-            } else if (item.menu_type === 'SCREEN') {
+            } else if(item.menu_type === 'SCREEN'||item.menu_type === 'FILTERED_SCREEN') {
               screens.push(item);
-            } else if (item.menu_type === 'HIDDEN') {
+            } else if(item.menu_type === 'HIDDEN'){
               screens.push(item);
             }
           });
 
           // ******** Routing 초기화 ***********
-          this.init(this.homeRouting, screens);
+          this.init(this.homeRouting,screens);
           // *********************************
           this.menuGroup = groups;
           this.screens = screens;
@@ -406,10 +404,10 @@ Copyright © HatioLab Inc. All rights reserved.
        * @param  {Array} items all menu list
        * @return {Array} child screen array
        */
-      _getChildMenu: function (menuGroup, items) {
+      _getChildMenu: function(menuGroup, items) {
         return items.filter(function (item) {
-          var screenMenuFlag = (item && item.menu_type === 'SCREEN' && item.parent_id === menuGroup.id);
-          if (screenMenuFlag) {
+          var screenMenuFlag = (item && (item.menu_type === 'SCREEN'||item.menu_type === 'FILTERED_SCREEN') && item.parent_id === menuGroup.id);
+          if(screenMenuFlag) {
             item.parent_name = menuGroup.title;
           }
           return screenMenuFlag;
