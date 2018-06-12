@@ -45,7 +45,7 @@ Copyright © HatioLab Inc. All rights reserved.
 
       paper-scroll-header-panel {
         height: 100%;
-        @apply(--things-sidebar-panel);
+        @apply --things-sidebar-panel;
       }
 
       .brand {
@@ -63,7 +63,7 @@ Copyright © HatioLab Inc. All rights reserved.
         font-size: 14px;
         font-weight: 400;
         text-align: left;
-        @apply(--border-radius-clear);
+        @apply --border-radius-clear;
       }
 
       iron-collapse:focus,
@@ -72,7 +72,7 @@ Copyright © HatioLab Inc. All rights reserved.
       }
 
       paper-button iron-icon {
-        @apply(--things-small-icon);
+        @apply --things-small-icon;
         margin-top: -2px;
         margin-right: 4px
       }
@@ -130,6 +130,22 @@ Copyright © HatioLab Inc. All rights reserved.
       a {
         text-decoration: none;
       }
+      things-input-field{
+        display:block;
+        overflow:hidden;
+        background-color:rgba(0,0,0,.1);
+        border-bottom:1px solid rgba(0,0,0,.1);
+        padding:7px 7px 7px 0;
+      }
+      things-input-field::shadow label,things-input-field::shadow input{
+        margin-bottom:0
+      }
+      things-input-field::shadow label{
+        color:#88a5c5
+      }
+      things-input-field::shadow input{
+        width:calc(65% - 1px)
+      }
     </style>
 
     <things-ajax auto id="refresh" resource-url="[[resourceUrl]]" resource-action="[[resourceAction]]" query-fields="[[queryFields]]"
@@ -140,8 +156,8 @@ Copyright © HatioLab Inc. All rights reserved.
 
     <!-- Drawer Scroll Header Panel -->
     <paper-scroll-header-panel id="panel">
-      <things-input-field label="메뉴 검색" id="inputMenuName" value="{{searchMenu::input}}" hidden=[[!searchEnable]]></things-input-field>
       <content></content>
+      <things-input-field label="메뉴검색" id="inputMenuName" value="{{searchMenu::input}}" hidden=[[!searchEnable]]></things-input-field>
       <template is="dom-repeat" items="{{menuGroup}}" as=group>
         <!-- Standard Menu -->
         <template is="dom-if" if={{isStandard}}>
