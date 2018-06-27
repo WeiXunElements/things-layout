@@ -149,6 +149,7 @@ Copyright © HatioLab Inc. All rights reserved.
       }
     </style>
 
+    <things-i18n-msg auto msgid="label.menu_search" msg="{{lMenuSearch}}" hidden>ID</things-i18n-msg>
     <things-ajax auto id="refresh" resource-url="[[resourceUrl]]" resource-action="[[resourceAction]]" query-fields="[[queryFields]]"
       last-response="{{menus}}">
     </things-ajax>
@@ -158,7 +159,7 @@ Copyright © HatioLab Inc. All rights reserved.
     <!-- Drawer Scroll Header Panel -->
     <paper-scroll-header-panel id="panel">
       <content></content>
-      <things-input-field label="메뉴검색" id="inputMenuName" value="{{searchMenu::input}}" hidden=[[!searchEnable]]></things-input-field>
+      <things-input-field label="[[lMenuSearch]]" id="inputMenuName" value="{{searchMenu::input}}" hidden=[[!searchEnable]]></things-input-field>
       <template is="dom-repeat" items="{{menuGroup}}" as=group>
         <!-- Standard Menu -->
         <template is="dom-if" if={{isStandard}}>
