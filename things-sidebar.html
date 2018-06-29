@@ -159,11 +159,11 @@ Copyright © HatioLab Inc. All rights reserved.
     <!-- Drawer Scroll Header Panel -->
     <paper-scroll-header-panel id="panel">
       <content></content>
-      <things-input-field label="[[lMenuSearch]]" id="inputMenuName" value="{{searchMenu::input}}" hidden=[[!searchEnable]]></things-input-field>
+      <things-input-field label="[[lMenuSearch]]" id="inputMenuName" value="{{searchMenu::change}}" hidden=[[!searchEnable]]></things-input-field>
       <template is="dom-repeat" items="{{menuGroup}}" as=group>
         <!-- Standard Menu -->
         <template is="dom-if" if={{isStandard}}>
-          <paper-button aria-controls={{group.menuGroupId}} on-click="toggle">
+          <paper-button aria-controls={{group.menuGroupId}} on-click="toggle" hidden=[[groupTitleHidden]]>
             <iron-icon icon="icons:folder"></iron-icon>[[group.title]]
           </paper-button>
 
@@ -338,6 +338,10 @@ Copyright © HatioLab Inc. All rights reserved.
         searchEnable: {
           type: Boolean,
           value: false
+        },
+        groupTitleHidden:{
+          type: Boolean,
+          value: false
         }
       },
 
@@ -349,7 +353,6 @@ Copyright © HatioLab Inc. All rights reserved.
         Things.RoutingBehavior,
         Things.GlobalBehavior
       ],
-
       /**
        * Life Cycle
        * *******
@@ -366,7 +369,7 @@ Copyright © HatioLab Inc. All rights reserved.
        * @param {Object} currentMenu 
        */
       _computeGroupOpend: function (group, currentMenu) {
-        if (this.isMobile) {
+        if (this.isMobile||this.groupTitleHidden) {
           return true;
         } else {
           return group.id == currentMenu.parent_id;
@@ -497,8 +500,20 @@ Copyright © HatioLab Inc. All rights reserved.
        */
       menuSearch: function (searchText) {
         if (!searchText) {
+          if(this.groupTitleHidden != false){
+            this.querySelectorAll('iron-collapse').forEach(function(el){
+              el.hide();
+            });
+          }
+          this.groupTitleHidden = false;
           return null;
         } else {
+          if(this.groupTitleHidden != true){
+            this.querySelectorAll('iron-collapse').forEach(function(el){
+              el.show();
+            });
+          }
+          this.groupTitleHidden = true;
           return function (item) {
             var titleName = item.title;
             return titleName.indexOf(searchText) != -1;
