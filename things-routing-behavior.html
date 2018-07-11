@@ -56,6 +56,11 @@ Copyright © HatioLab Inc. All rights reserved.
         init: function(defaultRouting, menus) {
             var me = this;
 
+            menus.push({
+                routing: 'index_oi.html',
+                routing_type: 'STATIC'
+            });
+
             var defaultRoutingScreen = menus.filter(function(object) {
                 return ('/' + object.routing) == defaultRouting
             });
