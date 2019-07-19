@@ -1,6 +1,6 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © Weixun Inc. All rights reserved.
 -->
 <link rel="import" href="../things-detail/things-menu-detail-view.html">
 
@@ -56,10 +56,17 @@ Copyright © HatioLab Inc. All rights reserved.
         init: function(defaultRouting, menus) {
             var me = this;
 
-            menus.push({
-                routing: 'index_oi.html',
-                routing_type: 'STATIC'
-            });
+            if (app && app.tagName && app.tagName.toLocaleLowerCase() === 'xstudio-app') {
+                menus.push({
+                    routing: 'index_studio.html',
+                    routing_type: 'STATIC'
+                });
+            } else {
+                menus.push({
+                    routing: 'index_oi.html',
+                    routing_type: 'STATIC'
+                });
+            }
 
             var defaultRoutingScreen = menus.filter(function(object) {
                 return ('/' + object.routing) == defaultRouting
@@ -322,9 +329,17 @@ Copyright © HatioLab Inc. All rights reserved.
                     }
                 });
                 document.dispatchEvent(event);
-                if (window.location.pathname != '/index_oi.html') {
-                    page.redirect('/');
+                let redirectUrl = '/';
+                switch(window.location.pathname) {
+                    case '/index_oi.html':
+                        redirectUrl += 'index_oi.html';
+                        break;
+                    case '/index_studio.html':
+                        redirectUrl += 'index_studio.html';
+                        break;
                 }
+
+                page.redirect(redirectUrl);
             });
 
             page({
