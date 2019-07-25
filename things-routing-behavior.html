@@ -56,17 +56,10 @@ Copyright © Weixun Inc. All rights reserved.
         init: function(defaultRouting, menus) {
             var me = this;
 
-            if (app && app.tagName && app.tagName.toLocaleLowerCase() === 'xstudio-app') {
-                menus.push({
-                    routing: 'index_studio.html',
-                    routing_type: 'STATIC'
-                });
-            } else {
-                menus.push({
-                    routing: 'index_oi.html',
-                    routing_type: 'STATIC'
-                });
-            }
+            menus.push({
+                routing: 'index_oi.html',
+                routing_type: 'STATIC'
+            });
 
             var defaultRoutingScreen = menus.filter(function(object) {
                 return ('/' + object.routing) == defaultRouting
@@ -329,17 +322,10 @@ Copyright © Weixun Inc. All rights reserved.
                     }
                 });
                 document.dispatchEvent(event);
-                let redirectUrl = '/';
-                switch(window.location.pathname) {
-                    case '/index_oi.html':
-                        redirectUrl += 'index_oi.html';
-                        break;
-                    case '/index_studio.html':
-                        redirectUrl += 'index_studio.html';
-                        break;
-                }
 
-                page.redirect(redirectUrl);
+                if (window.location.pathname != '/index_oi.html') {
+                    page.redirect('/');
+                }
             });
 
             page({
