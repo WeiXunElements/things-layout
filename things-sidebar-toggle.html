@@ -1,13 +1,13 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="../paper-tooltip/paper-tooltip.html" />
 
-<link rel="import" href="../things-global-behavior/things-global-behavior.html">
-<link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
+<link rel="import" href="../things-global-behavior/things-global-behavior.html" />
+<link rel="import" href="../things-i18n-msg/things-i18n-msg.html" />
 
 <!--
   Sidebar Toggle을 위한 화면 
@@ -22,8 +22,8 @@ Copyright © HatioLab Inc. All rights reserved.
       }
       paper-button {
         /*background:url(/images/icon-brand.png) no-repeat transparent;*/
-        @apply(--things-brand-btn);
-        background-size:45px 45px !important;
+        @apply (--things-brand-btn);
+        background-size: 45px 45px !important;
       }
     </style>
 
@@ -37,11 +37,9 @@ Copyright © HatioLab Inc. All rights reserved.
 
   <script>
     Polymer({
-      is: 'things-sidebar-toggle',
+      is: "things-sidebar-toggle",
 
-      behaviors: [
-        Things.GlobalBehavior
-      ],
+      behaviors: [Things.GlobalBehavior],
 
       properties: {
         /**
@@ -50,7 +48,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {String}
          */
         drawerId: {
-          type: String
+          type: String,
         },
 
         /**
@@ -59,7 +57,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {String}
          */
         brandImageId: {
-          type: String
+          type: String,
         },
 
         /**
@@ -69,13 +67,13 @@ Copyright © HatioLab Inc. All rights reserved.
          */
         imageUrl: {
           type: String,
-          value: '/images/icon-brand.png',
-          computed: '_computeImageUrl(brandImageId)'
-        }
+          value: "/images/icon-brand.png",
+          computed: "_computeImageUrl(brandImageId)",
+        },
       },
 
       listeners: {
-        'sidebar-toggler.tap': 'toggleSidebar'
+        "sidebar-toggler.tap": "toggleSidebar",
       },
 
       /**
@@ -83,9 +81,9 @@ Copyright © HatioLab Inc. All rights reserved.
        ********
        * @param {String} brandImageId
        */
-      _computeImageUrl: function(brandImageId) {
-        var baseUrl = this.get('globals.baseUrl');
-        return baseUrl + '/download/' + brandImageId;
+      _computeImageUrl: function (brandImageId) {
+        var baseUrl = this.get("globals.baseUrl");
+        return baseUrl + "/download/" + brandImageId;
       },
 
       /**
@@ -93,17 +91,17 @@ Copyright © HatioLab Inc. All rights reserved.
        * **********
        * @param {Object} e
        */
-      toggleSidebar: function(e) {
+      toggleSidebar: function (e) {
         var drawer = app.$[this.drawerId];
 
-        if(drawer.forceNarrow) {
-          drawer.forceNarrow = false
-        } else if(!drawer.narrow) {
-          drawer.forceNarrow = true
+        if (drawer.forceNarrow) {
+          drawer.forceNarrow = false;
+        } else if (!drawer.narrow) {
+          drawer.forceNarrow = true;
         } else {
           drawer.togglePanel();
         }
-      }
+      },
     });
   </script>
 </dom-module>

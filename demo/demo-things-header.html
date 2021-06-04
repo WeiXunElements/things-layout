@@ -1,43 +1,38 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes" />
+    <title>things-header demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-  <title>things-header demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../../polymer/polymer.html" />
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html" />
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html" />
+    <link rel="import" href="../things-header.html" />
+  </head>
 
-  <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../things-header.html">
+  <body unresolved>
+    <demo-snippet class="centered-demo">
+      <template>
+        <sample-header></sample-header>
 
-</head>
+        <dom-module id="sample-header">
+          <template>
+            <things-header> </things-header>
+          </template>
 
-<body unresolved>
-  <demo-snippet class="centered-demo">
-    <template>
-      <sample-header></sample-header>
-
-      <dom-module id="sample-header">
-        <template>
-          <things-header>
-
-          </things-header>
-        </template>
-
-        <script>
-          Polymer({
-            is: "sample-header"
-          });
-        </script>
-      </dom-module>
-    </template>
-  </demo-snippet>
-
-</body>
+          <script>
+            Polymer({
+              is: "sample-header",
+            });
+          </script>
+        </dom-module>
+      </template>
+    </demo-snippet>
+  </body>
 </html>

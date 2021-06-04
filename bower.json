@@ -1,8 +1,8 @@
 {
     "name": "things-layout",
-    "version": "v2.2.16",
+    "version": "v2.2.17",
     "authors": [
-        "Hatio Lab. <heartyoh@hatiolab.com>"
+        "Shenzhen Weixun"
     ],
     "description": "An element providing Things Layout.",
     "keywords": [
@@ -11,8 +11,6 @@
         "seed"
     ],
     "main": "elements.html",
-    "license": "http://license.hatiolab.com/EULA",
-    "homepage": "http://elements.hatiolab.com/",
     "ignore": [
         "/.*",
         "/test/"

@@ -1,10 +1,10 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html" />
 
-<link rel="import" href="things-sidebar-toggle.html">
+<link rel="import" href="things-sidebar-toggle.html" />
 
 <!--
   헤더 엘리먼트
@@ -14,24 +14,23 @@ Copyright © HatioLab Inc. All rights reserved.
 
 <dom-module id="things-header">
   <template>
-  <style>
-    :host {
-      display: block;
-      background-color:var(--paper-blue-grey-800);
-      color:#fff;
-    }
-  </style>
+    <style>
+      :host {
+        display: block;
+        background-color: var(--paper-blue-grey-800);
+        color: #fff;
+      }
+    </style>
 
-  <div>
-    <!-- menu toggle -->
-    <things-sidebar-toggle drawer-id="[[drawerId]]" brand-image-id="[[brandImageId]]"></things-sidebar-toggle>
-  </div>
-
+    <div>
+      <!-- menu toggle -->
+      <things-sidebar-toggle drawer-id="[[drawerId]]" brand-image-id="[[brandImageId]]"></things-sidebar-toggle>
+    </div>
   </template>
 
   <script>
     Polymer({
-      is: 'things-header',
+      is: "things-header",
 
       properties: {
         /**
@@ -40,7 +39,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {String}
          */
         drawerId: {
-          type: String
+          type: String,
         },
 
         /**
@@ -49,9 +48,9 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {String}
          */
         brandImageId: {
-          type: String
-        }
-      }
+          type: String,
+        },
+      },
     });
   </script>
 </dom-module>
