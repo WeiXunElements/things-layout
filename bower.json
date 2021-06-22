@@ -1,6 +1,6 @@
 {
     "name": "things-layout",
-    "version": "v2.2.17",
+    "version": "v2.2.18",
     "authors": [
         "Shenzhen Weixun"
     ],
@@ -21,16 +21,16 @@
         "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.2",
         "paper-badge": "PolymerElements/paper-badge#^1.1.1",
         "paper-item": "PolymerElements/paper-item#^1.2.1",
-        "paper-listbox": "polymerelements/paper-listbox#^1.1.2",
-        "iron-flex-layout": "polymerelements/iron-flex-layout#^1.3.1",
+        "paper-listbox": "PolymerElements/paper-listbox#^1.1.2",
+        "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
         "iron-collapse": "PolymerElements/iron-collapse#^1.0.8",
-        "things-auth": "ThingsElements/things-auth",
-        "things-global-behavior": "ThingsElements/things-global-behavior",
-        "things-i18n-msg": "ThingsElements/things-i18n-msg",
-        "things-profile": "ThingsElements/things-profile",
-        "things-resource-combo": "ThingsElements/things-resource-combo",
-        "things-setting": "ThingsElements/things-setting",
-        "things-ajax": "ThingsElements/things-ajax",
+        "things-auth": "WeiXunElements/things-auth",
+        "things-global-behavior": "WeiXunElements/things-global-behavior",
+        "things-i18n-msg": "WeiXunElements/things-i18n-msg",
+        "things-profile": "WeiXunElements/things-profile",
+        "things-resource-combo": "WeiXunElements/things-resource-combo",
+        "things-setting": "WeiXunElements/things-setting",
+        "things-ajax": "WeiXunElements/things-ajax",
         "jsonfn": "https://github.com/vkiryukhin/jsonfn.git",
         "page": "visionmedia/page.js#~1.6.4"
     },
